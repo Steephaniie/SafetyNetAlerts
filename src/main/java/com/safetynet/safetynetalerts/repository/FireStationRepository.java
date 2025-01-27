@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class FireStationRepository {
-    List<FireStation> firestations;
+    private List<FireStation> firestations;
 
     // Constructeur
     public FireStationRepository() {

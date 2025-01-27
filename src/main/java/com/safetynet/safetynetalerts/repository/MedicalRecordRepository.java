@@ -9,11 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class MedicalRecordRepository {
-    List<MedicalRecord> medicalrecords;
+    private List<MedicalRecord> medicalrecords;
 
     public MedicalRecordRepository() {
         loadData();
@@ -69,6 +68,15 @@ public class MedicalRecordRepository {
         return medicalrecords.removeIf(record ->
                 record.getFirstName().equalsIgnoreCase(firstName)
                         && record.getLastName().equalsIgnoreCase(lastName));
+    }
+
+    /**
+     * Récupérer la liste de tous les dossiers médicaux.
+     *
+     * @return Liste des dossiers médicaux.
+     */
+    public List<MedicalRecord> getMedicalRecords() {
+        return medicalrecords;
     }
 }
 

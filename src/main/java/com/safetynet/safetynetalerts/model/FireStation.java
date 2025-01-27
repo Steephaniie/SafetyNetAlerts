@@ -7,22 +7,10 @@ import jakarta.persistence.Id;
 
 public class FireStation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identifiant unique pour la table FireStation
-
-    private String address; // Adresse de la station
+      private String address; // Adresse de la station
     private String station; // Numéro de la station
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getAddress() {
+      public String getAddress() {
         return address;
     }
 

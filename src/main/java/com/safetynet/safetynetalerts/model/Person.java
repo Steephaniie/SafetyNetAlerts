@@ -7,9 +7,7 @@ import jakarta.persistence.Id;
 
 public class Person {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identifiant unique pour l'entité
+
 
     private String firstName; // Prénom
     private String lastName;  // Nom
@@ -18,14 +16,6 @@ public class Person {
     private String zip;       // Code postal
     private String phone;     // Téléphone
     private String email;     // Email
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
