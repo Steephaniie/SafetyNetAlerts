@@ -1,10 +1,6 @@
 package com.safetynet.safetynetalerts.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import java.util.Date;
 import java.util.List;
@@ -18,9 +14,7 @@ public class MedicalRecord {
     private String lastName;  // Nom
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date birthdate; // Date de naissance
-    @ElementCollection
     private List<String> allergies;
-    @ElementCollection
     private List<String> medications;
 
     public String getFirstName() {

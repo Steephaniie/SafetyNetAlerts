@@ -1,35 +1,19 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.dto.FichierJsonDTO;
+import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.FireStation;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
 public class FireStationRepository {
-    private List<FireStation> firestations;
 
-    // Constructeur
-    public FireStationRepository() {
-        loadData();
-    }
+    private final JsonFileWriter jsonFileWriter;
 
-    // chargement des données depuis le fichier Json
-    private void loadData() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            File jsonFile = new File("src/main/resources/data.json");
-            // Lire les données et les convertir en listes
-            FichierJsonDTO fichierJsonDTO = objectMapper.readValue(jsonFile, FichierJsonDTO.class);
-            firestations = fichierJsonDTO.getFirestations();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public FireStationRepository(JsonFileWriter jsonFileWriter) {
+        this.jsonFileWriter = jsonFileWriter;
     }
 
     /**
@@ -38,7 +22,10 @@ public class FireStationRepository {
      * @param fireStation La nouvelle caserne de pompiers à ajouter.
      */
     public void addFireStation(FireStation fireStation) {
+
+        List<FireStation> firestations = jsonFileWriter.getFirestations();
         firestations.add(fireStation);
+        jsonFileWriter.setFirestations(firestations);
     }
 
     /**
@@ -49,12 +36,14 @@ public class FireStationRepository {
      * @return true si la mise à jour a réussi, false si l'adresse n'a pas été trouvée.
      */
     public boolean updateFireStation(String address, String newStationNumber) {
+        List<FireStation> firestations = jsonFileWriter.getFirestations();
         Optional<FireStation> fireStationOptional = firestations.stream()
                 .filter(fireStation -> fireStation.getAddress().equals(address))
                 .findFirst();
 
         if (fireStationOptional.isPresent()) {
             fireStationOptional.get().setStation(newStationNumber);
+            jsonFileWriter.setFirestations(firestations);
             return true; // Mise à jour réussie
         }
         return false; // Adresse non trouvée
@@ -67,7 +56,10 @@ public class FireStationRepository {
      * @return true si la caserne a été supprimée, false sinon.
      */
     public boolean deleteFireStation(String address) {
-        return firestations.removeIf(fireStation -> fireStation.getAddress().equals(address));
+        List<FireStation> firestations = jsonFileWriter.getFirestations();
+        boolean resultat = firestations.removeIf(fireStation -> fireStation.getAddress().equals(address));
+        jsonFileWriter.setFirestations(firestations);
+        return resultat;
     }
 
     /**
@@ -76,7 +68,7 @@ public class FireStationRepository {
      * @return La liste des casernes de pompiers.
      */
     public List<FireStation> getAllFireStations() {
-        return firestations;
+        return jsonFileWriter.getFirestations();
     }
 
 }

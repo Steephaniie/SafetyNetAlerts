@@ -1,13 +1,6 @@
 package com.safetynet.safetynetalerts.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-
 public class Person {
-
-
 
     private String firstName; // Prénom
     private String lastName;  // Nom

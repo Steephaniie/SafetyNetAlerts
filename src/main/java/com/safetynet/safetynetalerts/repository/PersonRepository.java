@@ -1,35 +1,21 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.dto.FichierJsonDTO;
+import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.Person;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
+@Service
 public class PersonRepository {
-    private List<Person> persons;
-
-   public PersonRepository() {
-        loadData();
-    }
 
 
-    private void loadData() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            File jsonFile = new File("src/main/resources/data.json");
-            // Lire les données et les convertir en listes
-            FichierJsonDTO fichierJsonDTO = objectMapper.readValue(jsonFile, FichierJsonDTO.class);
-            persons=fichierJsonDTO.getPersons();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private final JsonFileWriter jsonFileWriter;
+
+    public PersonRepository(JsonFileWriter jsonFileWriter) {
+        this.jsonFileWriter = jsonFileWriter;
     }
 
     /**
@@ -38,7 +24,9 @@ public class PersonRepository {
      * @return La personne ajoutée.
      */
     public Person addPerson(Person person) {
+        List<Person> persons = jsonFileWriter.getPersons();
         persons.add(person);
+        jsonFileWriter.setPersons(persons);
         return person; // Retourne la personne après l'avoir ajoutée
     }
     /**
@@ -49,20 +37,21 @@ public class PersonRepository {
      * @return La personne mise à jour ou null si elle n'existe pas.
      */
     public Person updatePerson(String firstName, String lastName, Person updatedPerson) {
+        List<Person> persons = jsonFileWriter.getPersons();
+
         Optional<Person> existingPersonOpt = persons.stream()
                 .filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
                 .findFirst();
 
         if (existingPersonOpt.isPresent()) {
             Person existingPerson = existingPersonOpt.get();
-
             // Mettre à jour les champs modifiables
             existingPerson.setAddress(updatedPerson.getAddress());
             existingPerson.setCity(updatedPerson.getCity());
             existingPerson.setZip(updatedPerson.getZip());
             existingPerson.setPhone(updatedPerson.getPhone());
             existingPerson.setEmail(updatedPerson.getEmail());
-
+            jsonFileWriter.setPersons(persons);
             return existingPerson; // Retourne la personne après la mise à jour
         }
 
@@ -76,11 +65,14 @@ public class PersonRepository {
      * @return true si la personne a été supprimée, false sinon.
      */
     public boolean deletePerson(String firstName, String lastName) {
+
+        List<Person> persons = jsonFileWriter.getPersons();
         int initialSize = persons.size();
         persons = persons.stream()
                 .filter(p -> !(p.getFirstName().equals(firstName) && p.getLastName().equals(lastName)))
                 .collect(Collectors.toList());
 
+        jsonFileWriter.setPersons(persons);
         return persons.size() < initialSize; // Retourne true si une personne a été supprimée
     }
 
@@ -90,7 +82,7 @@ public class PersonRepository {
      * @return Liste des personnes.
      */
     public List<Person> getAllPersons() {
-        return persons;
+        return jsonFileWriter.getPersons();
     }
 
 

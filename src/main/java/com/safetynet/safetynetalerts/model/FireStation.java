@@ -1,16 +1,11 @@
 package com.safetynet.safetynetalerts.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-
 public class FireStation {
 
       private String address; // Adresse de la station
     private String station; // Numéro de la station
 
-      public String getAddress() {
+    public String getAddress() {
         return address;
     }
 
