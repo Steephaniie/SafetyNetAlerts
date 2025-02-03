@@ -3,6 +3,11 @@ package com.safetynet.safetynetalerts.controller;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/person")
+@Tag(name = "Person Controller", description = "Gestion des informations des personnes.")
 public class PersonController {
 
     private final PersonService personService;
@@ -27,6 +33,10 @@ public class PersonController {
      * @return La liste de toutes les personnes.
      */
     @GetMapping
+    @Operation(summary = "Récupérer toutes les personnes", description = "Retourne une liste contenant toutes les personnes enregistrées.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès.")
+    })
     public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> persons = personService.getAllPersons();
         return new ResponseEntity<>(persons, HttpStatus.OK);
@@ -38,7 +48,14 @@ public class PersonController {
      * @return La personne ajoutée avec un statut HTTP 201.
      */
     @PostMapping
-    public ResponseEntity<Person> addPerson(@RequestBody Person person) {
+    @Operation(summary = "Ajouter une nouvelle personne", description = "Ajoute une personne avec les informations spécifiées dans la requête.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Personne ajoutée avec succès."),
+            @ApiResponse(responseCode = "400", description = "Requête invalide.")
+    })
+    public ResponseEntity<Person> addPerson(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails de la personne à ajouter.")
+            @RequestBody Person person) {
         try {
             Person createdPerson = personService.addPerson(person);
             return new ResponseEntity<>(createdPerson, HttpStatus.CREATED);
@@ -55,9 +72,17 @@ public class PersonController {
      * @return La personne mise à jour ou un statut HTTP 404 si la personne n'existe pas.
      */
     @PutMapping("/{firstName}/{lastName}")
+    @Operation(summary = "Mettre à jour une personne", description = "Mise à jour des informations d'une personne existante.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Personne mise à jour avec succès."),
+            @ApiResponse(responseCode = "404", description = "Personne non trouvée.")
+    })
     public ResponseEntity<Person> updatePerson(
+            @Parameter(description = "Prénom de la personne à mettre à jour.")
             @PathVariable String firstName,
+            @Parameter(description = "Nom de famille de la personne à mettre à jour.")
             @PathVariable String lastName,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nouvelles informations pour la personne.")
             @RequestBody Person updatedPerson) {
         try {
             Person updated = personService.updatePerson(firstName, lastName, updatedPerson);
@@ -74,8 +99,15 @@ public class PersonController {
      * @return Un statut HTTP 200 si la personne est supprimée, ou 404 si elle n'existe pas.
      */
     @DeleteMapping("/{firstName}/{lastName}")
+    @Operation(summary = "Supprimer une personne", description = "Supprime les informations d'une personne en fonction de son prénom et nom de famille.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Personne supprimée avec succès."),
+            @ApiResponse(responseCode = "404", description = "Personne non trouvée.")
+    })
     public ResponseEntity<String> deletePerson(
+            @Parameter(description = "Prénom de la personne à supprimer.")
             @PathVariable String firstName,
+            @Parameter(description = "Nom de famille de la personne à supprimer.")
             @PathVariable String lastName) {
         try {
             personService.deletePerson(firstName, lastName);
@@ -84,5 +116,5 @@ public class PersonController {
             return new ResponseEntity<>("Personne non trouvée.", HttpStatus.NOT_FOUND);
         }
     }
-    
+
 }

@@ -2,6 +2,11 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.service.FireStationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/firestation")
+@Tag(name = "FireStation Controller", description = "Gestion des associations entre casernes et adresses.")
 public class FireStationController {
 
     private final FireStationService fireStationService;
@@ -24,7 +30,14 @@ public class FireStationController {
      * @return Une réponse HTTP avec le statut approprié.
      */
     @PostMapping
-    public ResponseEntity<String> addFireStation(@RequestBody FireStation fireStation) {
+    @Operation(summary = "Ajouter une nouvelle association caserne/adresse", description = "Permet d'ajouter une nouvelle correspondance entre une caserne et une adresse spécifique.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Association ajoutée avec succès."),
+            @ApiResponse(responseCode = "400", description = "Requête invalide.")
+    })
+    public ResponseEntity<String> addFireStation(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails de la nouvelle correspondance caserne/adresse à ajouter.")
+            @RequestBody FireStation fireStation) {
         fireStationService.addFireStation(fireStation);
         return ResponseEntity.ok("Caserne ajoutée avec succès.");
     }
@@ -37,8 +50,15 @@ public class FireStationController {
      * @return Une réponse HTTP avec le statut correspondant.
      */
     @PutMapping
+    @Operation(summary = "Mettre à jour le numéro d'une caserne", description = "Modifie le numéro de caserne associé à une adresse donnée.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Caserne mise à jour avec succès."),
+            @ApiResponse(responseCode = "404", description = "Adresse introuvable.")
+    })
     public ResponseEntity<String> updateFireStation(
+            @Parameter(description = "Adresse à mettre à jour.")
             @RequestParam String address,
+            @Parameter(description = "Nouveau numéro de caserne.")
             @RequestParam String newStationNumber) {
         boolean updated = fireStationService.updateFireStation(address, newStationNumber);
         if (updated) {
@@ -55,7 +75,14 @@ public class FireStationController {
      * @return Une réponse HTTP avec le statut correspondant.
      */
     @DeleteMapping
-    public ResponseEntity<String> deleteFireStation(@RequestParam String address) {
+    @Operation(summary = "Supprimer une association caserne/adresse", description = "Supprime la correspondance d'une caserne pour une adresse spécifique.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Correspondance supprimée avec succès."),
+            @ApiResponse(responseCode = "404", description = "Adresse introuvable.")
+    })
+    public ResponseEntity<String> deleteFireStation(
+            @Parameter(description = "Adresse de l'association caserne/adresse à supprimer.")
+            @RequestParam String address) {
         boolean deleted = fireStationService.deleteFireStation(address);
         if (deleted) {
             return ResponseEntity.ok("Caserne supprimée avec succès.");
@@ -70,6 +97,10 @@ public class FireStationController {
      * @return Une liste d'objets `FireStation`.
      */
     @GetMapping
+    @Operation(summary = "Récupérer toutes les associations caserne/adresse", description = "Retourne une liste des correspondances entre casernes et adresses enregistrées.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès.")
+    })
     public ResponseEntity<List<FireStation>> getAllFireStations() {
         List<FireStation> fireStations = fireStationService.getAllFireStations();
         return ResponseEntity.ok(fireStations);

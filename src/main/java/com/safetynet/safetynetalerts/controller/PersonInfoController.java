@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "Person Info Controller", description = "Gestion des informations des habitants par nom de famille.")
 public class PersonInfoController {
 
     private final PersonInfoService personInfoService;
@@ -24,6 +29,9 @@ public class PersonInfoController {
      * @return Une liste de DTO contenant les informations des habitants avec ce nom.
      */
     @GetMapping("/personInfo")
+    @Operation(summary = "Récupérer les informations d'une personne par son nom de famille",
+            description = "Retourne une liste contenant les informations des habitants correspondant au nom de famille fourni.")
+    @ApiResponse(responseCode = "200", description = "Liste récupérée avec succès.")
     public List<PersonInfoDTO> getPersonInfo(@RequestParam("lastName") String lastName) {
         return personInfoService.getPersonInfoByLastName(lastName);
     }
