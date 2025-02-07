@@ -7,13 +7,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
-
+@Slf4j
 @RestController
 @Tag(name = "Flood Stations Controller", description = "Gestion des foyers desservis par les casernes.")
 public class FloodStationsController {
@@ -42,6 +43,7 @@ public class FloodStationsController {
             @RequestParam("stations") String stations) {
         // Convertir la liste des stations en un tableau
         List<String> stationNumbers = Arrays.asList(stations.split(","));
+        log.info("api getFloodStations ok");
         return floodStationsService.getHouseholdsByStations(stationNumbers);
     }
 }

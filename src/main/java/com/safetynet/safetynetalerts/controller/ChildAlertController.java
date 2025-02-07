@@ -6,10 +6,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+@Slf4j
 @RestController
 @Tag(name = "Child Alert Controller", description = "Gestion des alertes liées aux enfants pour une adresse donnée.")
 public class ChildAlertController {
@@ -35,6 +36,7 @@ public class ChildAlertController {
             @ApiResponse(responseCode = "500", description = "Erreur interne du serveur.")
     })
     public ChildAlertDTO getChildrenAtAddress(@RequestParam String address) {
+        log.info("api getChildrenAtAddress ok");
         return childAlertService.getChildrenAtAddress(address);
     }
 }

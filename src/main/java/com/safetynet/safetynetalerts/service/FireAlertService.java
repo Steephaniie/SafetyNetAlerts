@@ -6,6 +6,8 @@ import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class FireAlertService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FireAlertService.class);
 
     private final PersonService personService;
     private final MedicalRecordService medicalRecordService;
@@ -33,10 +37,13 @@ public class FireAlertService {
      * @return Un DTO FireAlertDTO avec les informations des habitants et du numéro de caserne.
      */
     public FireAlertDTO getFireAlertByAddress(String address) {
+        logger.debug("Début de la méthode getFireAlertByAddress pour l'adresse : {}", address);
+
         // Récupérer toutes les personnes habitant à cette adresse
         List<Person> personsAtAddress = personService.getAllPersons().stream()
                 .filter(person -> address.equals(person.getAddress()))
                 .collect(Collectors.toList());
+        logger.debug("Nombre de personnes trouvées à l'adresse {} : {}", address, personsAtAddress.size());
 
         // Récupérer tous les dossiers médicaux pour les personnes de cette adresse
         List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
@@ -47,6 +54,11 @@ public class FireAlertService {
                 .map(FireStation::getStation)
                 .findFirst()
                 .orElse(null); // Adresse non couverte par une caserne
+        if (fireStationNumber != null) {
+            logger.debug("La caserne couvrant l'adresse {} a été trouvée avec le numéro : {}", address, fireStationNumber);
+        } else {
+            logger.debug("Aucune caserne trouvée pour l'adresse : {}", address);
+        }
 
         // Construire la liste des habitants avec leurs informations détaillées
         List<ResidentInfo> residents = personsAtAddress.stream()
@@ -56,8 +68,12 @@ public class FireAlertService {
                                     && record.getLastName().equals(person.getLastName()))
                             .findFirst()
                             .orElse(null);
+           //     })
+          //      .collect(Collectors.toList());
+                    //todo
+//        logger.debug("Nombre d'habitants inclus avec leurs informations détaillées : {}", residents.size());
 
-                    if (medicalRecord != null) {
+        if (medicalRecord != null) {
                         int age = calculateAge(medicalRecord.getBirthdate());
                         return new ResidentInfo(
                                 person.getFirstName(),
@@ -80,8 +96,10 @@ public class FireAlertService {
                 .collect(Collectors.toList());
 
         // Retourner le DTO avec les informations collectées
-        return new FireAlertDTO(fireStationNumber, residents);
-    }
+        FireAlertDTO fireAlertDTO = new FireAlertDTO(fireStationNumber, residents);
+        logger.debug("Fin de la méthode getFireAlertByAddress pour l'adresse {} : DTO construit avec succès",address);
+        return fireAlertDTO;
+}
 
     /**
      * Méthode utilitaire pour calculer l'âge à partir d'une date de naissance.

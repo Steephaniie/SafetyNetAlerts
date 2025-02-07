@@ -1,7 +1,13 @@
 package com.safetynet.safetynetalerts.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@Getter
+@Setter
+@AllArgsConstructor
 public class CommunityEmailDTO {
 
     private String city; // Ville pour laquelle les emails sont listés
@@ -9,28 +15,6 @@ public class CommunityEmailDTO {
 
     // Constructeurs
     public CommunityEmailDTO() {
-    }
-
-    public CommunityEmailDTO(String city, List<String> emails) {
-        this.city = city;
-        this.emails = emails;
-    }
-
-    // Getters et Setters
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public List<String> getEmails() {
-        return emails;
-    }
-
-    public void setEmails(List<String> emails) {
-        this.emails = emails;
     }
 
     @Override

@@ -6,8 +6,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class MedicalRecordService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MedicalRecordService.class);
 
     private final MedicalRecordRepository medicalRecordRepository;
 
@@ -21,7 +26,9 @@ public class MedicalRecordService {
      * @param medicalRecord Le dossier médical à ajouter.
      */
     public void addMedicalRecord(MedicalRecord medicalRecord) {
+        logger.debug("Début de l'ajout d'un nouveau dossier médical : {}", medicalRecord);
         medicalRecordRepository.addMedicalRecord(medicalRecord);
+        logger.debug("Fin de l'ajout du dossier médical : {}", medicalRecord);
     }
 
     /**
@@ -33,7 +40,14 @@ public class MedicalRecordService {
      * @return true si la mise à jour a réussi, false sinon.
      */
     public boolean updateMedicalRecord(String firstName, String lastName, MedicalRecord updatedMedicalRecord) {
-        return medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord);
+        logger.debug("Début de la mise à jour du dossier médical pour : {}, {}", firstName, lastName);
+        boolean isUpdated = medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord);
+        if (isUpdated) {
+            logger.debug("Mise à jour réussie du dossier médical pour : {}, {}", firstName, lastName);
+        } else {
+            logger.debug("Échec de la mise à jour du dossier médical pour : {}, {}", firstName, lastName);
+        }
+        return isUpdated;
     }
 
     /**
@@ -44,7 +58,14 @@ public class MedicalRecordService {
      * @return true si la suppression a réussi, false sinon.
      */
     public boolean deleteMedicalRecord(String firstName, String lastName) {
-        return medicalRecordRepository.deleteMedicalRecord(firstName, lastName);
+        logger.debug("Début de la suppression du dossier médical pour : {}, {}", firstName, lastName);
+        boolean isDeleted = medicalRecordRepository.deleteMedicalRecord(firstName, lastName);
+        if (isDeleted) {
+            logger.debug("Suppression réussie du dossier médical pour : {}, {}", firstName, lastName);
+        } else {
+            logger.debug("Échec de la suppression du dossier médical pour : {}, {}", firstName, lastName);
+        }
+        return isDeleted;
     }
 
     /**
@@ -53,6 +74,9 @@ public class MedicalRecordService {
      * @return La liste des dossiers médicaux.
      */
     public List<MedicalRecord> getAllMedicalRecords() {
-        return medicalRecordRepository.getMedicalRecords();
+        logger.debug("Début de la récupération de tous les dossiers médicaux.");
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        logger.debug("Fin de récupération des dossiers médicaux. Nombre de dossiers trouvés : {}", medicalRecords.size());
+        return medicalRecords;
     }
 }

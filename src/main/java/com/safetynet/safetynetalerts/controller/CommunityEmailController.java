@@ -6,11 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+@Slf4j
 @RestController
 public class CommunityEmailController {
 
@@ -36,6 +37,7 @@ public class CommunityEmailController {
             @Parameter(description = "La ville pour laquelle récupérer les emails.")
             @RequestParam("city") String city) {
         CommunityEmailDTO communityEmail = communityEmailService.getEmailsByCity(city);
+        log.info("api getEmailsByCity ok ");
         return ResponseEntity.ok(communityEmail);
     }
 }

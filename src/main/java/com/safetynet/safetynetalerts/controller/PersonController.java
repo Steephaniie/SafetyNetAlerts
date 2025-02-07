@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.service.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/person")
 @Tag(name = "Person Controller", description = "Gestion des informations des personnes.")
@@ -32,6 +33,7 @@ public class PersonController {
      *
      * @return La liste de toutes les personnes.
      */
+
     @GetMapping
     @Operation(summary = "Récupérer toutes les personnes", description = "Retourne une liste contenant toutes les personnes enregistrées.")
     @ApiResponses(value = {
@@ -39,6 +41,7 @@ public class PersonController {
     })
     public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> persons = personService.getAllPersons();
+        log.info("api getAllPersons ok");
         return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 
@@ -58,8 +61,10 @@ public class PersonController {
             @RequestBody Person person) {
         try {
             Person createdPerson = personService.addPerson(person);
+            log.info("api addPerson ok");
             return new ResponseEntity<>(createdPerson, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
+            log.error("api addPerson ko"+e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -86,8 +91,10 @@ public class PersonController {
             @RequestBody Person updatedPerson) {
         try {
             Person updated = personService.updatePerson(firstName, lastName, updatedPerson);
+            log.info("api updatePerson ok");
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (RuntimeException e) {
+            log.error("api updatePerson ko"+e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 404 si la personne n'existe pas
         }
     }
@@ -111,8 +118,10 @@ public class PersonController {
             @PathVariable String lastName) {
         try {
             personService.deletePerson(firstName, lastName);
+           log.info("api deletePerson ok");
             return new ResponseEntity<>("Personne supprimée avec succès.", HttpStatus.OK);
         } catch (RuntimeException e) {
+            log.error("api deletePerson ko"+e.getMessage());
             return new ResponseEntity<>("Personne non trouvée.", HttpStatus.NOT_FOUND);
         }
     }

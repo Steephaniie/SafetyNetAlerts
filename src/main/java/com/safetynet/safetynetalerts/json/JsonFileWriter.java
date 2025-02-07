@@ -5,12 +5,15 @@ import com.safetynet.safetynetalerts.dto.FichierJsonDTO;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+@Getter
+@Slf4j
 @Repository
 public class JsonFileWriter {
     private static final String JSON_FILE_PATH = "src/main/resources/data.json";
@@ -35,6 +38,7 @@ public class JsonFileWriter {
             firestations = fichierJsonDTO.getFirestations();
             medicalrecords = fichierJsonDTO.getMedicalrecords();
         } catch (IOException e) {
+            log.error ("JsonFileWriter - erreur lors du chargement des données");
             e.printStackTrace();
         }
     }
@@ -48,13 +52,10 @@ public class JsonFileWriter {
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(JSON_FILE_PATH), fichierJsonDTO);
         } catch (IOException e) {
+            log.error("writeToFile - erreur lors de la sauvegarde dans le fichier JSON");
             e.printStackTrace();
             throw new RuntimeException("Erreur lors de la sauvegarde dans le fichier JSON.");
         }
-    }
-
-    public List<Person> getPersons() {
-        return persons;
     }
 
     public void setPersons(List<Person> persons) {
@@ -62,17 +63,9 @@ public class JsonFileWriter {
         writeToFile();
     }
 
-    public List<FireStation> getFirestations() {
-        return firestations;
-    }
-
     public void setFirestations(List<FireStation> firestations) {
         this.firestations = firestations;
         writeToFile();
-    }
-
-    public List<MedicalRecord> getMedicalrecords() {
-        return medicalrecords;
     }
 
     public void setMedicalrecords(List<MedicalRecord> medicalrecords) {

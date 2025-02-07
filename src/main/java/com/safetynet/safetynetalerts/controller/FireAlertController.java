@@ -6,11 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+@Slf4j
 @RestController
 @Tag(name = "Fire Alert Controller", description = "Point d'entrée pour les alertes incendies.")
 public class FireAlertController {
@@ -38,8 +39,10 @@ public class FireAlertController {
         FireAlertDTO fireAlertDTO = fireAlertService.getFireAlertByAddress(address);
 
         if (fireAlertDTO.getResidents().isEmpty() && fireAlertDTO.getFireStationNumber() == null) {
+            log.info("api getFireAlert ko - adresse de l'alerte non trouvée");
             return ResponseEntity.notFound().build(); // Adresse non trouvée
         }
+        log.info("api getFireAlert ok");
         return ResponseEntity.ok(fireAlertDTO);
     }
 }

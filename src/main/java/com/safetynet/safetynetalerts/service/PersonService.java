@@ -2,11 +2,14 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class PersonService {
 
@@ -23,10 +26,13 @@ public class PersonService {
      * @return La personne ajoutée.
      */
     public Person addPerson(Person person) {
+        log.debug("Ajout de la personne : {}", person);
         if (person.getFirstName() == null || person.getLastName() == null) {
             throw new IllegalArgumentException("Le prénom et le nom sont obligatoires");
         }
-        return personRepository.addPerson(person);
+        Person addedPerson = personRepository.addPerson(person);
+        log.debug("Personne ajoutée avec succès : {}", addedPerson);
+        return addedPerson;
     }
 
     /**
@@ -37,12 +43,14 @@ public class PersonService {
      * @return La personne mise à jour.
      */
     public Person updatePerson(String firstName, String lastName, Person updatedPerson) {
+        log.debug("Mise à jour de la personne avec prénom : {}, nom : {} avec les détails : {}", firstName, lastName, updatedPerson);
         Person updated = personRepository.updatePerson(firstName, lastName, updatedPerson);
 
         if (updated == null) {
             throw new RuntimeException("Personne non trouvée pour la mise à jour");
         }
 
+        log.debug("Personne mise à jour avec succès : {}", updated);
         return updated;
     }
 
@@ -53,12 +61,14 @@ public class PersonService {
      * @return true si la personne a été supprimée, false sinon.
      */
     public boolean deletePerson(String firstName, String lastName) {
+        log.debug("Suppression de la personne avec prénom : {}, nom : {}", firstName, lastName);
         boolean isDeleted = personRepository.deletePerson(firstName, lastName);
 
         if (!isDeleted) {
             throw new RuntimeException("Échec de la suppression car la personne n'existe pas");
         }
 
+        log.debug("Personne supprimée avec succès : prénom : {}, nom : {}", firstName, lastName);
         return true;
     }
 
@@ -67,7 +77,10 @@ public class PersonService {
      *
      * @return La liste de toutes les personnes.
      */
-    public List<Person> getAllPersons() {
-        return personRepository.getAllPersons();
-    }
+     public List<Person> getAllPersons() {
+         log.debug("Récupération de toutes les personnes");
+         List<Person> allPersons = personRepository.getAllPersons();
+         log.debug("Nombre total de personnes trouvées : {}", allPersons.size());
+         return allPersons;
+     }
 }

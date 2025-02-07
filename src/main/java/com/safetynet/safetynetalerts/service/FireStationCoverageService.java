@@ -5,6 +5,9 @@ import com.safetynet.safetynetalerts.dto.FireStationCoverageDTO.PersonInfo;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class FireStationCoverageService {
 
@@ -36,18 +39,21 @@ public class FireStationCoverageService {
      * @return Un DTO contenant la liste des personnes couvertes, et le nombre d'adultes/enfants.
      */
     public FireStationCoverageDTO getCoverageByStationNumber(String stationNumber) {
+        log.debug("Début d'exécution de la méthode getCoverageByStationNumber avec stationNumber : {}", stationNumber);
         // Récupérer les adresses associées à la caserne
         List<FireStation> fireStations = fireStationService.getAllFireStations();
         List<String> coveredAddresses = fireStations.stream()
                 .filter(fireStation -> fireStation.getStation().equals(stationNumber))
                 .map(FireStation::getAddress)
                 .collect(Collectors.toList());
+        log.debug("Adresses couvertes récupérées pour la caserne {}: {}", stationNumber, coveredAddresses);
 
         // Récupérer toutes les personnes habitants aux adresses couvertes
         List<Person> allPersons = personService.getAllPersons();
         List<Person> coveredPersons = allPersons.stream()
                 .filter(person -> coveredAddresses.contains(person.getAddress()))
                 .collect(Collectors.toList());
+        log.debug("Personnes couvertes récupérées pour les adresses {}: {}", coveredAddresses, coveredPersons);
 
         // Récupérer les dossiers médicaux de toutes ces personnes
         List<MedicalRecord> allMedicalRecords = medicalRecordService.getAllMedicalRecords();
@@ -75,6 +81,7 @@ public class FireStationCoverageService {
                 }
             }
 
+            log.debug("Ajout des informations de la personne : {} {}", person.getFirstName(), person.getLastName());
             // Ajouter l'information de la personne à la liste
             personInfos.add(new PersonInfo(
                     person.getFirstName(),
@@ -85,6 +92,7 @@ public class FireStationCoverageService {
         }
 
         // Créer et retourner le DTO
+        log.debug("Nombre total d'adultes : {}, Nombre total d'enfants : {}", numberOfAdults, numberOfChildren);
         return new FireStationCoverageDTO(personInfos, numberOfAdults, numberOfChildren);
     }
 

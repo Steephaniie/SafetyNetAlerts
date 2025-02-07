@@ -7,11 +7,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/firestation")
 @Tag(name = "FireStation Controller", description = "Gestion des associations entre casernes et adresses.")
@@ -39,6 +40,7 @@ public class FireStationController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails de la nouvelle correspondance caserne/adresse à ajouter.")
             @RequestBody FireStation fireStation) {
         fireStationService.addFireStation(fireStation);
+        log.info("api addFireStation ok ");
         return ResponseEntity.ok("Caserne ajoutée avec succès.");
     }
 
@@ -62,8 +64,10 @@ public class FireStationController {
             @RequestParam String newStationNumber) {
         boolean updated = fireStationService.updateFireStation(address, newStationNumber);
         if (updated) {
+            log.info("api updateFireStation ok ");
             return ResponseEntity.ok("Caserne mise à jour avec succès.");
         } else {
+            log.info("api updateFireStation ko - données de mise à jour non trouvées ");
             return ResponseEntity.notFound().build();
         }
     }
@@ -85,8 +89,10 @@ public class FireStationController {
             @RequestParam String address) {
         boolean deleted = fireStationService.deleteFireStation(address);
         if (deleted) {
+            log.info("api deleteFireStation ok ");
             return ResponseEntity.ok("Caserne supprimée avec succès.");
         } else {
+            log.info("api deleteFireStation ko - donnée introuvable");
             return ResponseEntity.notFound().build();
         }
     }
@@ -103,6 +109,7 @@ public class FireStationController {
     })
     public ResponseEntity<List<FireStation>> getAllFireStations() {
         List<FireStation> fireStations = fireStationService.getAllFireStations();
+        log.info("api getAllFireStations ok ");
         return ResponseEntity.ok(fireStations);
     }
 }
