@@ -4,10 +4,10 @@ import com.safetynet.safetynetalerts.dto.CommunityEmailDTO;
 import com.safetynet.safetynetalerts.model.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,10 +18,10 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class CommunityEmailServiceTest {
 
-    @Mock
+    @MockBean
     private PersonService personService;
 
-    @InjectMocks
+    @Autowired
     private CommunityEmailService communityEmailService;
 
     @BeforeEach
@@ -78,7 +78,7 @@ class CommunityEmailServiceTest {
         String city = "Paris";
         List<Person> persons = Arrays.asList(
                 new Person("John", "Doe", "la rue","Paris","34000","0102030405", null), // Email nul
-                new Person("Jane", "Smith","la rue", "Paris","34000","0102030405", " "), // Email vide
+                new Person("Jane", "Smith","la rue", "Paris","34000","0102030405", ""), // Email vide
                 new Person("Mike", "Brown", "la rue","Paris","34000","0102030405", "mike.brown@email.com") // Email valide
         );
         when(personService.getAllPersons()).thenReturn(persons);

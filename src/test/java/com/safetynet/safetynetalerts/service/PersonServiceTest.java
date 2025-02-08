@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -96,8 +95,7 @@ class PersonServiceTest {
         when(personRepository.deletePerson("John", "Doe")).thenReturn(false);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> personService.deletePerson("John", "Doe"));
-        assertEquals("Échec de la suppression car la personne n'existe pas", exception.getMessage());
+        assertFalse(personService.deletePerson("John", "Doe"));
         verify(personRepository, times(1)).deletePerson("John", "Doe");
     }
 

@@ -7,12 +7,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/medicalRecord")
@@ -39,7 +43,7 @@ public class MedicalRecordController {
     })
     public ResponseEntity<String> addMedicalRecord(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails du dossier médical à ajouter.")
-            @RequestBody MedicalRecord medicalRecord) {
+            @Valid @RequestBody MedicalRecord medicalRecord) {
         medicalRecordService.addMedicalRecord(medicalRecord);
         log.info("api addMedicalRecord ok");
         return ResponseEntity.status(HttpStatus.CREATED).body("Dossier médical ajouté avec succès.");
@@ -95,7 +99,7 @@ public class MedicalRecordController {
            log.info("api deleteMedicalRecord ok");
             return ResponseEntity.ok("Dossier médical supprimé avec succès.");
         } else {
-            log.info( "api deleteMedicalRecord ko - dossier non trouvé pour suppression ");
+            log.info( "api deleteMedicalRecord ko - dossier médical non trouvé pour suppression ");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dossier médical non trouvé pour suppression.");
         }
     }

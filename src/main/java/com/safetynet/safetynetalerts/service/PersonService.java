@@ -65,7 +65,8 @@ public class PersonService {
         boolean isDeleted = personRepository.deletePerson(firstName, lastName);
 
         if (!isDeleted) {
-            throw new RuntimeException("Échec de la suppression car la personne n'existe pas");
+            log.warn("Personne non trouvée pour suppression : prénom={}, nom={}", firstName, lastName);
+            return false;
         }
 
         log.debug("Personne supprimée avec succès : prénom : {}, nom : {}", firstName, lastName);

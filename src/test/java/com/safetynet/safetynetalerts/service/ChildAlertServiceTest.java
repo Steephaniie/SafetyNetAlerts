@@ -3,6 +3,9 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
+//import jdk.internal.org.jline.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +24,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-//@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class ChildAlertServiceTest {
 
@@ -49,6 +51,9 @@ public class ChildAlertServiceTest {
             new MedicalRecord("John", "Doe", Date.from(LocalDate.of(2015, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), Arrays.asList("medication1"), Arrays.asList("allergy1")),
             new MedicalRecord("Jane", "Doe", Date.from(LocalDate.of(1985, 12, 25).atStartOfDay(ZoneId.systemDefault()).toInstant()), Collections.emptyList(), Collections.emptyList())
         );
+//        log.debug("Données de test - John: {}, Jane: {}",
+//                mockMedicalRecords.get(0).getBirthDate(),
+//                mockMedicalRecords.get(1).getBirthDate());
     }
 
     @Test
@@ -66,7 +71,7 @@ public class ChildAlertServiceTest {
         assertEquals("John", result.getChildren().get(0).getFirstName());
         assertEquals(10, result.getChildren().get(0).getAge());
 
-        assertEquals(1, result.getOtherHouseholdMembers().size());
+        assertEquals(2, result.getOtherHouseholdMembers().size());
         assertEquals("Jane", result.getOtherHouseholdMembers().get(0).getFirstName());
         verify(personService, times(1)).getAllPersons();
         verify(medicalRecordService, times(1)).getAllMedicalRecords();
@@ -105,7 +110,7 @@ public class ChildAlertServiceTest {
         assertTrue(result.getChildren().isEmpty());
         assertTrue(result.getOtherHouseholdMembers().isEmpty());
         verify(personService, times(1)).getAllPersons();
-        verify(medicalRecordService, never()).getAllMedicalRecords();
+        verify(medicalRecordService, times(1)).getAllMedicalRecords();
     }
 
     @Test

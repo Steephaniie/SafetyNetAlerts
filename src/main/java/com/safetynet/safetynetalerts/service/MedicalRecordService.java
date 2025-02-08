@@ -26,9 +26,11 @@ public class MedicalRecordService {
      * @param medicalRecord Le dossier médical à ajouter.
      */
     public void addMedicalRecord(MedicalRecord medicalRecord) {
-        logger.debug("Début de l'ajout d'un nouveau dossier médical : {}", medicalRecord);
+        logger.info("Tentative d'ajout d'un dossier médical : {} {} - Date de naissance : {}",
+                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthDate());
         medicalRecordRepository.addMedicalRecord(medicalRecord);
-        logger.debug("Fin de l'ajout du dossier médical : {}", medicalRecord);
+        logger.info("Dossier médical ajouté avec succès : {} {} - Date de naissance : {}",
+                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthDate());
     }
 
     /**
@@ -40,12 +42,14 @@ public class MedicalRecordService {
      * @return true si la mise à jour a réussi, false sinon.
      */
     public boolean updateMedicalRecord(String firstName, String lastName, MedicalRecord updatedMedicalRecord) {
-        logger.debug("Début de la mise à jour du dossier médical pour : {}, {}", firstName, lastName);
+        logger.info("Tentative de mise à jour du dossier médical pour : {} {} - Nouvelle date de naissance : {}",
+                firstName, lastName, updatedMedicalRecord.getBirthDate());
         boolean isUpdated = medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord);
         if (isUpdated) {
-            logger.debug("Mise à jour réussie du dossier médical pour : {}, {}", firstName, lastName);
+            logger.info("Mise à jour réussie du dossier médical pour : {} {} - Nouvelle date de naissance : {}",
+                    firstName, lastName, updatedMedicalRecord.getBirthDate());
         } else {
-            logger.debug("Échec de la mise à jour du dossier médical pour : {}, {}", firstName, lastName);
+            logger.warn("Échec de la mise à jour du dossier médical pour : {} {}", firstName, lastName);
         }
         return isUpdated;
     }
@@ -58,12 +62,12 @@ public class MedicalRecordService {
      * @return true si la suppression a réussi, false sinon.
      */
     public boolean deleteMedicalRecord(String firstName, String lastName) {
-        logger.debug("Début de la suppression du dossier médical pour : {}, {}", firstName, lastName);
+        logger.info("Tentative de suppression du dossier médical pour : {} {}", firstName, lastName);
         boolean isDeleted = medicalRecordRepository.deleteMedicalRecord(firstName, lastName);
         if (isDeleted) {
-            logger.debug("Suppression réussie du dossier médical pour : {}, {}", firstName, lastName);
+            logger.info("Dossier médical supprimé avec succès : {} {}", firstName, lastName);
         } else {
-            logger.debug("Échec de la suppression du dossier médical pour : {}, {}", firstName, lastName);
+            logger.warn("Échec de la suppression du dossier médical pour : {} {}", firstName, lastName);
         }
         return isDeleted;
     }
@@ -74,9 +78,13 @@ public class MedicalRecordService {
      * @return La liste des dossiers médicaux.
      */
     public List<MedicalRecord> getAllMedicalRecords() {
-        logger.debug("Début de la récupération de tous les dossiers médicaux.");
+        logger.info("Début de la récupération de tous les dossiers médicaux.");
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        logger.debug("Fin de récupération des dossiers médicaux. Nombre de dossiers trouvés : {}", medicalRecords.size());
+        for (MedicalRecord record : medicalRecords) {
+            logger.info("Dossier trouvé : {} {} - Date de naissance : {}",
+                    record.getFirstName(), record.getLastName(), record.getBirthDate());
+        }
+        logger.info("Fin de récupération des dossiers médicaux. Nombre de dossiers trouvés : {}", medicalRecords.size());
         return medicalRecords;
     }
 }

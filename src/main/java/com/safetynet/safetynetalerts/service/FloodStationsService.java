@@ -69,7 +69,7 @@ public class FloodStationsService {
                                     .findFirst()
                                     .orElse(null);
 
-                            int age = medicalRecord != null ? calculateAge(medicalRecord.getBirthdate()) : 0;
+                            int age = medicalRecord != null ? calculateAge(medicalRecord.getBirthDate()) : 0;
 
                             return new HouseholdInfo(
                                     person.getFirstName(),

@@ -55,12 +55,16 @@ public class ChildAlertService {
                             && record.getLastName().equals(person.getLastName()))
                     .findFirst()
                     .orElse(null);
+            log.debug("Personne trouvée : {} {}, Age calculé : {}",
+                    person.getFirstName(), person.getLastName(),
+                    (medicalRecord != null) ? calculateAge(medicalRecord.getBirthDate()) : "Pas de dossier médical");
+
 
 //            if (medicalRecord != null) {
                 log.debug("Dossier médical trouvé pour : {} {}", person.getFirstName(), person.getLastName()); // Succès recherche
 
                 if (medicalRecord != null) {
-                int age = calculateAge(medicalRecord.getBirthdate());
+                int age = calculateAge(medicalRecord.getBirthDate());
                 if (age <= 18) {
                     // Ajouter l'enfant à la liste des enfants
                     children.add(new ChildInfo(person.getFirstName(), person.getLastName(), age));
@@ -73,11 +77,15 @@ public class ChildAlertService {
 
         // Ajouter les adultes/foyer restants si les personnes sont listées comme enfants
         for (ChildInfo child : children) {
-            householdMembers.addAll(personsAtAddress.stream()
+            personsAtAddress.stream()
                     .filter(person -> !child.getFirstName().equals(person.getFirstName())
-                            || !child.getLastName().equals(person.getLastName())) // Exclure l'enfant lui-même
-                    .map(person -> new HouseholdMember(person.getFirstName(), person.getLastName()))
-                    .collect(Collectors.toList()));
+                            || !child.getLastName().equals(person.getLastName()))
+                    .forEach(person -> {
+                        HouseholdMember member = new HouseholdMember(person.getFirstName(), person.getLastName());
+                        if (!householdMembers.contains(member)) {
+                            householdMembers.add(member);
+                        }
+                    });
         }
 
             // Ajouter un log du résultat final
@@ -106,12 +114,12 @@ public class ChildAlertService {
                 log.debug("Date de naissance nulle, renvoi de l'âge 0"); // Date nulle
                 return 0;
             }
-            LocalDate birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            int age = LocalDate.now().getYear() - birthLocalDate.getYear() -
-                    (LocalDate.now().getDayOfYear() < birthLocalDate.getDayOfYear() ? 1 : 0);
-            log.debug("Date de naissance : {}, âge calculé : {}", birthDate, age); // Log calcul âge
-            return age;
-//            return LocalDate.now().getYear() - birthLocalDate.getYear() -
-//                (LocalDate.now().getDayOfYear() < birthLocalDate.getDayOfYear() ? 1 : 0);
+        LocalDate birthLocalDate = birthDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+        int age = LocalDate.now().getYear() - birthLocalDate.getYear() -
+                (LocalDate.now().getDayOfYear() < birthLocalDate.getDayOfYear() ? 1 : 0);
+
+        log.debug("Calcul âge - Date de naissance : {}, Age calculé : {}", birthDate, age);
+        return age;
+
     }
 }

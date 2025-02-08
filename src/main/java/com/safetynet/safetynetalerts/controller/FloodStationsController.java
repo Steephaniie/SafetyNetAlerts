@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,12 +40,22 @@ public class FloodStationsController {
             @ApiResponse(responseCode = "200", description = "Données récupérées avec succès."),
             @ApiResponse(responseCode = "400", description = "Paramètre invalide : Liste des numéros de casernes.")
     })
-    public FloodStationsDTO getFloodStations(
+    public ResponseEntity<FloodStationsDTO> getFloodStations(
             @Parameter(description = "Liste des numéros de casernes, séparés par des virgules.")
-            @RequestParam("stations") String stations) {
-        // Convertir la liste des stations en un tableau
-        List<String> stationNumbers = Arrays.asList(stations.split(","));
-        log.info("api getFloodStations ok");
-        return floodStationsService.getHouseholdsByStations(stationNumbers);
+            @RequestParam(value = "stations", required = false) String stations) {
+
+        // Vérifier si le paramètre est vide ou null
+        if (stations == null || stations.trim().isEmpty()) {
+            log.error("Requête invalide : stations est vide.");
+            return ResponseEntity.badRequest().build(); // Retourne HTTP 400
+        }
+        try {
+            List<String> stationNumbers = Arrays.asList(stations.split(","));
+            log.info("api getFloodStations ok");
+            return ResponseEntity.ok(floodStationsService.getHouseholdsByStations(stationNumbers));
+        } catch (Exception e) {
+            log.error("Erreur lors de la récupération des foyers : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retourne HTTP 500
+        }
     }
 }

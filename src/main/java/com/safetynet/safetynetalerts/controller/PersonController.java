@@ -89,14 +89,15 @@ public class PersonController {
             @PathVariable String lastName,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nouvelles informations pour la personne.")
             @RequestBody Person updatedPerson) {
-        try {
+
             Person updated = personService.updatePerson(firstName, lastName, updatedPerson);
-            log.info("api updatePerson ok");
-            return new ResponseEntity<>(updated, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            log.error("api updatePerson ko"+e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 404 si la personne n'existe pas
+
+        if (updated == null) {
+            log.error("api updatePerson ko - Personne non trouvée");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        log.info("api updatePerson ok");
+        return ResponseEntity.ok(updated);
     }
 
     /**
@@ -116,12 +117,12 @@ public class PersonController {
             @PathVariable String firstName,
             @Parameter(description = "Nom de famille de la personne à supprimer.")
             @PathVariable String lastName) {
-        try {
-            personService.deletePerson(firstName, lastName);
-           log.info("api deletePerson ok");
+        boolean deleted = personService.deletePerson(firstName, lastName);
+        if (deleted) {
+            log.info("api deletePerson ok");
             return new ResponseEntity<>("Personne supprimée avec succès.", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            log.error("api deletePerson ko"+e.getMessage());
+        } else {
+            log.error("api deletePerson ko - Personne non trouvée");
             return new ResponseEntity<>("Personne non trouvée.", HttpStatus.NOT_FOUND);
         }
     }

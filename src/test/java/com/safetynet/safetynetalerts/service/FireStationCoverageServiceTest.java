@@ -1,11 +1,11 @@
 package com.safetynet.safetynetalerts.service;
 
-import com.safetynet.safetynetalerts.dto.FireAlertDTO;
-import com.safetynet.safetynetalerts.dto.FireAlertDTO.ResidentInfo;
+import com.safetynet.safetynetalerts.dto.FireStationCoverageDTO;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,32 +13,31 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-
 @SpringBootTest
-class FireAlertServiceTest {
-
+public class FireStationCoverageServiceTest {
+    @MockBean
+    private  FireStationService fireStationService;
     @MockBean
     private PersonService personService;
-
     @MockBean
     private MedicalRecordService medicalRecordService;
-
-    @MockBean
-    private FireStationService fireStationService;
-
     @Autowired
-    private FireAlertService fireAlertService;
+    private FireStationCoverageService fireStationCoverageService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
-    void testGetFireAlertByAddress() {
-        // Initialisation des mocks
-        MockitoAnnotations.openMocks(this);
-
+    public void testGetCoverageByStationNumber() throws Exception {
         // Mock des données d'entrée
         String address = "123 Main St";
         FireStation fireStation = new FireStation();
@@ -54,7 +53,7 @@ class FireAlertServiceTest {
         person.setAddress(address);
 
         Date birthDate = Date.from(
-            LocalDate.of(1985, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+                LocalDate.of(1985, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()
         );
 
         MedicalRecord medicalRecord = new MedicalRecord();
@@ -67,23 +66,19 @@ class FireAlertServiceTest {
         List<MedicalRecord> medicalRecords= new java.util.ArrayList<>();
         medicalRecords.add(medicalRecord);
 
-        // Mock des services
+
+        when(fireStationService.getAllFireStations()).thenReturn(fireStations);
         when(personService.getAllPersons()).thenReturn(List.of(person));
         when(medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecords);
-        when(fireStationService.getAllFireStations()).thenReturn(fireStations);
 
-        // Appel de la méthode
-        FireAlertDTO result = fireAlertService.getFireAlertByAddress(address);
+        FireStationCoverageDTO result = fireStationCoverageService.getCoverageByStationNumber("3");
+        // Vérifications
+        assertEquals(1, result.getNumberOfAdults(), "Le nombre d'adultes doit être 1.");
+        assertEquals(0, result.getNumberOfChildren(), "Le nombre d'enfants doit être 0.");
+        assertEquals(1, result.getPersons().size(), "Le nombre total de personnes couvertes doit être 1.");
+        assertEquals("John", result.getPersons().get(0).getFirstName(), "Le prénom de la personne doit être John.");
+        assertEquals("Doe", result.getPersons().get(0).getLastName(), "Le nom de famille doit être Doe.");
+        assertEquals("123-456-7890", result.getPersons().get(0).getPhone(), "Le numéro de téléphone doit correspondre.");
 
-        // Assertions
-        assertEquals(fireStation.getStation(), result.getFireStationNumber());
-        assertEquals(1, result.getResidents().size());
-
-        ResidentInfo resident = result.getResidents().get(0);
-        assertEquals("John Doe", resident.getFirstName()+" "+resident.getLastName() );
-        assertEquals("123-456-7890", resident.getPhone());
-        assertEquals(40, resident.getAge()); // Exemple avec l'année actuelle
-        assertEquals(List.of("med1", "med2"), resident.getMedications());
-        assertEquals(List.of("allergy1"), resident.getAllergies());
     }
 }

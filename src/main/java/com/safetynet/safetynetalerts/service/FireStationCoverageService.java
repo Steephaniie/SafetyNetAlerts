@@ -3,12 +3,12 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.FireStationCoverageDTO;
 import com.safetynet.safetynetalerts.dto.FireStationCoverageDTO.PersonInfo;
 import com.safetynet.safetynetalerts.model.FireStation;
-import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,12 +40,20 @@ public class FireStationCoverageService {
      */
     public FireStationCoverageDTO getCoverageByStationNumber(String stationNumber) {
         log.debug("Début d'exécution de la méthode getCoverageByStationNumber avec stationNumber : {}", stationNumber);
+
         // Récupérer les adresses associées à la caserne
         List<FireStation> fireStations = fireStationService.getAllFireStations();
         List<String> coveredAddresses = fireStations.stream()
                 .filter(fireStation -> fireStation.getStation().equals(stationNumber))
                 .map(FireStation::getAddress)
                 .collect(Collectors.toList());
+
+        // Si aucune caserne ne correspond, lever une exception 404
+        if (coveredAddresses.isEmpty()) {
+            log.warn("Aucune caserne trouvée pour le numéro de station : {}", stationNumber);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fire station not found");
+        }
+
         log.debug("Adresses couvertes récupérées pour la caserne {}: {}", stationNumber, coveredAddresses);
 
         // Récupérer toutes les personnes habitants aux adresses couvertes
@@ -53,18 +61,17 @@ public class FireStationCoverageService {
         List<Person> coveredPersons = allPersons.stream()
                 .filter(person -> coveredAddresses.contains(person.getAddress()))
                 .collect(Collectors.toList());
+
         log.debug("Personnes couvertes récupérées pour les adresses {}: {}", coveredAddresses, coveredPersons);
 
         // Récupérer les dossiers médicaux de toutes ces personnes
         List<MedicalRecord> allMedicalRecords = medicalRecordService.getAllMedicalRecords();
-        
+
         int numberOfAdults = 0;
         int numberOfChildren = 0;
-
         List<PersonInfo> personInfos = new ArrayList<>();
 
         for (Person person : coveredPersons) {
-            // Trouver le dossier médical de la personne
             MedicalRecord medicalRecord = allMedicalRecords.stream()
                     .filter(record -> record.getFirstName().equals(person.getFirstName()) &&
                             record.getLastName().equals(person.getLastName()))
@@ -72,8 +79,7 @@ public class FireStationCoverageService {
                     .orElse(null);
 
             if (medicalRecord != null) {
-                // Calculer l'âge pour distinguer adultes et enfants
-                int age = calculateAge(medicalRecord.getBirthdate());
+                int age = calculateAge(medicalRecord.getBirthDate());
                 if (age <= 18) {
                     numberOfChildren++;
                 } else {
@@ -82,7 +88,6 @@ public class FireStationCoverageService {
             }
 
             log.debug("Ajout des informations de la personne : {} {}", person.getFirstName(), person.getLastName());
-            // Ajouter l'information de la personne à la liste
             personInfos.add(new PersonInfo(
                     person.getFirstName(),
                     person.getLastName(),
@@ -91,7 +96,6 @@ public class FireStationCoverageService {
             ));
         }
 
-        // Créer et retourner le DTO
         log.debug("Nombre total d'adultes : {}, Nombre total d'enfants : {}", numberOfAdults, numberOfChildren);
         return new FireStationCoverageDTO(personInfos, numberOfAdults, numberOfChildren);
     }

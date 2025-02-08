@@ -74,7 +74,7 @@ public class FireAlertService {
 //        logger.debug("Nombre d'habitants inclus avec leurs informations détaillées : {}", residents.size());
 
         if (medicalRecord != null) {
-                        int age = calculateAge(medicalRecord.getBirthdate());
+                        int age = calculateAge(medicalRecord.getBirthDate());
                         return new ResidentInfo(
                                 person.getFirstName(),
                                 person.getLastName(),
