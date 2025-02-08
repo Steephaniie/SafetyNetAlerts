@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.service.MedicalRecordService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ class MedicalRecordControllerTest {
     @MockBean
     private MedicalRecordService medicalRecordService;
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    @BeforeEach
+    void setUp() {
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Applique le fuseau UTC
+    }
+
     @Test
     void addMedicalRecord_ShouldReturn201WhenValid() throws Exception {
         // Arrange
@@ -42,7 +50,7 @@ class MedicalRecordControllerTest {
                 {
                     "firstName": "John",
                     "lastName": "Doe",
-                    "birthDate": "01/01/1990",
+                    "birthdate": "1990/01/01",
                     "medications": ["med1", "med2"],
                     "allergies": ["allergy1"]
                 }
@@ -90,7 +98,7 @@ class MedicalRecordControllerTest {
                 {
                     "firstName": "John",
                     "lastName": "Doe",
-                    "birthDate": "1990-02-02",
+                    "birthdate": "1989/12/31",
                     "medications": ["med3"],
                     "allergies": ["allergy2"]
                 }
@@ -116,7 +124,7 @@ class MedicalRecordControllerTest {
                 {
                     "firstName": "Jane",
                     "lastName": "Smith",
-                    "birthDate": "1985-05-05",
+                    "birthdate": "1985/05/05",
                     "medications": ["med4"],
                     "allergies": ["allergy3"]
                 }
@@ -161,8 +169,6 @@ class MedicalRecordControllerTest {
     @Test
     void getAllMedicalRecords_ShouldReturnListWhenRecordsExist() throws Exception {
         // Arrange
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Applique le fuseau UTC
         MedicalRecord record = new MedicalRecord("John", "Doe", dateFormat.parse("31/12/1989"), List.of("allergy1"), List.of("med1"));
         System.out.println("Date enregistrée dans le test : " + dateFormat.format(record.getBirthDate()));
         Mockito.when(medicalRecordService.getAllMedicalRecords()).thenReturn(List.of(record));
@@ -172,7 +178,7 @@ class MedicalRecordControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].birthDate").value("31/12/1989"))
+                .andExpect(jsonPath("$[0].birthdate").value("31/12/1989"))
                 .andExpect(jsonPath("$[0].allergies[0]").value("allergy1"))
                 .andExpect(jsonPath("$[0].medications[0]").value("med1"));
 
