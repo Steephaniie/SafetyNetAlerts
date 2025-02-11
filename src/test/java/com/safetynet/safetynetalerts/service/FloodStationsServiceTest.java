@@ -5,22 +5,19 @@ import com.safetynet.safetynetalerts.dto.FloodStationsDTO.HouseholdInfo;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.FireStation;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import static org.mockito.Mockito.*;
 
+/**
+ * Classe de test pour le service FloodStationsService.
+ * Vérifie que les listes de foyers et leurs informations médicales sont correctement générées
+ * en fonction des numéros de casernes passés en paramètre.
+ */
 @SpringBootTest
 class FloodStationsServiceTest {
 
@@ -36,16 +33,21 @@ class FloodStationsServiceTest {
     @Autowired
     private FloodStationsService floodStationsService;
 
+    /**
+     * Teste la méthode {@link FloodStationsService#getHouseholdsByStations(List)} en simulant
+     * des données pour les casernes, les personnes et leurs dossiers médicaux.
+     * Vérifie que les informations des foyers sont correctement groupées par adresse.
+     */
     @Test
     void testGetHouseholdsByStations() {
-        // Mock des casernes
+        // Préparation des données mockées pour les casernes
         List<FireStation> fireStations = Arrays.asList(
                 new FireStation("123 Main St", "1"),
                 new FireStation("456 Elm St", "2")
         );
         when(fireStationService.getAllFireStations()).thenReturn(fireStations);
 
-        // Mock des personnes
+        // Simule les données des personnes liées aux adresses couvertes par les casernes
         List<Person> persons = Arrays.asList(
                 new Person("John", "Doe", "123 Main St", "City", "11111", "111-111-1111","email1@sfr.fr"),
                 new Person("Jane", "Smith", "456 Elm St", "City", "11111", "222-222-2222","email2@sfr.fr"),
@@ -53,7 +55,7 @@ class FloodStationsServiceTest {
         );
         when(personService.getAllPersons()).thenReturn(persons);
 
-        // Mock des dossiers médicaux
+        // Simule les dossiers médicaux des personnes
         List<MedicalRecord> medicalRecords = Arrays.asList(
                 new MedicalRecord("John", "Doe", new Date(System.currentTimeMillis() - 1000000000L),
                         Arrays.asList("Allergy1", "Allergy2"), Arrays.asList("Med1", "Med2")),
@@ -90,22 +92,29 @@ class FloodStationsServiceTest {
         assertEquals(Arrays.asList("Med3"), household2.get(0).getMedications());
         assertEquals(Collections.emptyList(), household2.get(0).getAllergies());
 
-        // Vérification des mocks
+        // Vérifie que les services mockés ont été appelés le nombre de fois attendu
         verify(fireStationService, times(1)).getAllFireStations();
         verify(personService, times(1)).getAllPersons();
         verify(medicalRecordService, times(1)).getAllMedicalRecords();
     }
 
+    /**
+     * Teste la méthode {@link FloodStationsService#getHouseholdsByStations(List)}
+     * dans le cas où aucune caserne n'est enregistrée.
+     * Vérifie que le résultat est vide.
+     */
     @Test
     void testGetHouseholdsByStations_EmptyResult() {
-        // Aucun mock des casernes
+        // Cas où aucune caserne n'est disponible (liste vide simulée)
         when(fireStationService.getAllFireStations()).thenReturn(Collections.emptyList());
 
-        // Appel de la méthode à tester
+        // Appel de la méthode à tester avec les numéros de casernes spécifiés
+        // Appel de la méthode à tester avec un numéro de caserne inexistant
         List<String> stationNumbers = Collections.singletonList("1");
         FloodStationsDTO result = floodStationsService.getHouseholdsByStations(stationNumbers);
 
-        // Vérifications
+        // Vérifications des résultats de la méthode pour s'assurer que les données sont correctes
+        // Vérifications que le résultat est vide mais pas nul
         assertNotNull(result);
         assertTrue(result.getHouseholdsByAddress().isEmpty());
 

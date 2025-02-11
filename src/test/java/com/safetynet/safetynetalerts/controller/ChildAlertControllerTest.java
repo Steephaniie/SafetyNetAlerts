@@ -12,13 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Classe de test pour le contrôleur ChildAlertController.
+ * Cette classe utilise MockMvc pour tester les points de terminaison REST
+ * associés à l'alerte enfant. Chaque méthode teste un scénario spécifique
+ * comme le succès ou les erreurs possibles.
+ */
 @WebMvcTest(ChildAlertController.class)
 class ChildAlertControllerTest {
 
@@ -49,14 +53,20 @@ class ChildAlertControllerTest {
 
     }
 
+    /**
+     * Test de scénario de succès pour le point de terminaison qui récupère les enfants vivant à une adresse spécifique.
+     * Vérifie que les enfants et les membres du foyer corrects sont retournés dans la réponse.
+     *
+     * @throws Exception en cas d'erreur de requête ou de traitement
+     */
     @Test
     @DisplayName("Test succès - Récupération des enfants pour une adresse")
     void testGetChildrenAtAddressSuccess() throws Exception {
-        // Simule la réponse du service
+        // Simule la réponse renvoyée par le service
         String testAddress = "123 Test Street";
         when(childAlertService.getChildrenAtAddress(testAddress)).thenReturn(mockChildAlertDTO);
 
-        // Envoie une requête GET et vérifie les résultats
+        // Envoie une requête GET et valide les résultats
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                         .param("address", testAddress))
                 .andExpect(status().isOk())
@@ -74,24 +84,36 @@ class ChildAlertControllerTest {
                 .andExpect(jsonPath("$.otherHouseholdMembers[1].lastName").value("Doe"));
     }
 
+    /**
+     * Test de scénario d'erreur lorsque le paramètre `address` est manquant dans la requête.
+     * Vérifie que la réponse contient un statut 400 Bad Request.
+     *
+     * @throws Exception en cas d'erreur de requête ou de traitement
+     */
     @Test
     @DisplayName("Test erreur - Adresse manquante")
     void testGetChildrenAtAddressMissingAddress() throws Exception {
-        // Requête sans le paramètre obligatoire "address"
+        // Envoi une requête sans le paramètre obligatoire "address"
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert"))
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Test de scénario d'erreur où le service lance une erreur interne du serveur.
+     * Vérifie que la réponse contient un statut 500 Internal Server Error.
+     *
+     * @throws Exception en cas d'erreur de requête ou de traitement
+     */
     @Test
     @DisplayName("Test erreur - Service lance une exception")
     void testGetChildrenAtAddressServiceError() throws Exception {
         String testAddress = "123 Test Street";
 
-        // Simule une exception lancée par le service
+        // Simule l'exception déclenchée par le service
         when(childAlertService.getChildrenAtAddress(testAddress))
                 .thenThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur interne du serveur"));
 
-        // Requête et vérification du statut 500
+        // Envoie une requête et vérifie que le statut 500 est renvoyé
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                         .param("address", testAddress))
                 .andExpect(status().isInternalServerError());

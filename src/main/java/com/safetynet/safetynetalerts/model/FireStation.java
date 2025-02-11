@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/**
+ * Représente une caserne de pompiers avec une adresse et un numéro.
+ */
 @Setter
 @Getter
 @AllArgsConstructor

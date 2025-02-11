@@ -10,14 +10,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Arrays;
 import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Classe de test pour le contrôleur FloodStationsController.
+ * Vérifie les différents scénarios concernant le point d'accès /flood/stations.
+ */
 @WebMvcTest(FloodStationsController.class)
 class FloodStationsControllerTest {
 
@@ -31,9 +33,10 @@ class FloodStationsControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Initialisation d'une réponse fictive pour les tests
+        // Prépare les données de test avant chaque méthode
         mockResponse = new FloodStationsDTO();
-        // Simuler householdsByAddress avec des données fictives
+
+        // Simule les données représentant householdsByAddress à renvoyer par le service
         mockResponse.setHouseholdsByAddress(Map.of(
                 "Address 1", Arrays.asList(
                         new FloodStationsDTO.HouseholdInfo("John", "Doe", "123-456", 30, Arrays.asList("Med1"), Arrays.asList("Allergy1")),
@@ -43,23 +46,32 @@ class FloodStationsControllerTest {
                         new FloodStationsDTO.HouseholdInfo("Alice", "Smith", "345-678", 40, Arrays.asList("Med3"), Arrays.asList("Allergy3"))
                 )
         ));
-
     }
 
+    /**
+     * Vérifie que l'accès au point /flood/stations fonctionne correctement
+     * lorsque des paramètres valides sont fournis.
+     *
+     * @throws Exception si la requête échoue.
+     */
     @Test
     void testGetFloodStations_success() throws Exception {
-        // Configurer la simulation de FloodStationsService
+        // Configuration du service mock pour retourner une réponse attendue
         Mockito.when(floodStationsService.getHouseholdsByStations(anyList()))
                 .thenReturn(mockResponse);
 
-        // Envoyer une requête GET avec des paramètres valides et vérifier le résultat
+        // Envoi d'une requête GET au point d'accès avec des paramètres valides
         mockMvc.perform(get("/flood/stations")
                         .param("stations", "1,2")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) // Vérifie le code HTTP 200
-                .andExpect(jsonPath("$.householdsByAddress").isMap()) // Vérifie que householdsByAddress est bien un objet
-                .andExpect(jsonPath("$.householdsByAddress['Address 1']").isArray()) // Vérifie que Address 1 contient une liste
-                .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].firstName").value("John")) // Vérifie le premier élément
+                // Vérification que le code HTTP renvoyé est 200
+                .andExpect(status().isOk())
+                // Vérification que householdsByAddress est une structure de type Map
+                .andExpect(jsonPath("$.householdsByAddress").isMap())
+                // Vérification que l'adresse Address 1 contient une liste
+                .andExpect(jsonPath("$.householdsByAddress['Address 1']").isArray())
+                // Vérification des données du premier élément de la liste
+                .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].firstName").value("John"))
                 .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].lastName").value("Doe"))
                 .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].phone").value("123-456"))
                 .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].age").value(30))
@@ -67,25 +79,39 @@ class FloodStationsControllerTest {
                 .andExpect(jsonPath("$.householdsByAddress['Address 1'][0].allergies[0]").value("Allergy1"));
     }
 
+    /**
+     * Vérifie que l'accès au point /flood/stations retourne une erreur
+     * lorsque le paramètre est manquant ou invalide.
+     *
+     * @throws Exception si la requête échoue.
+     */
     @Test
     void testGetFloodStations_invalidParameter() throws Exception {
-        // Envoyer une requête GET avec des paramètres manquants ou invalides
+        // Simulation d'une requête avec un paramètre vide
         mockMvc.perform(get("/flood/stations")
-                        .param("stations", "") // Paramètre vide
+                        .param("stations", "") // Paramètre invalide (vide)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest()); // Vérifie le code HTTP 400
+                // Vérification que le code HTTP renvoyé est 400 (Bad Request)
+                .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Vérifie que l'accès au point /flood/stations retourne une erreur
+     * 500 si une exception est levée par le service.
+     *
+     * @throws Exception si la requête échoue.
+     */
     @Test
     void testGetFloodStations_serviceError() throws Exception {
-        // Configurer FloodStationsService pour renvoyer une exception en simulant une erreur
+        // Simulation de l'exception levée par le service FloodStationsService
         Mockito.when(floodStationsService.getHouseholdsByStations(anyList()))
                 .thenThrow(new RuntimeException("Service Error"));
 
-        // Envoyer une requête GET et vérifier que l'erreur est correctement propagée
+        // Envoi d'une requête GET et vérification de la gestion correcte de l'erreur
         mockMvc.perform(get("/flood/stations")
                         .param("stations", "1,2")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError()); // Vérifie le code HTTP 500
+                // Vérification que le code HTTP renvoyé est 500 (Internal Server Error)
+                .andExpect(status().isInternalServerError());
     }
 }

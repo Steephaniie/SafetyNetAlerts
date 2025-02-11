@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @RestController
 @Tag(name = "Phone Alert Controller", description = "Gestion des numéros de téléphone des résidents couverts par une caserne.")

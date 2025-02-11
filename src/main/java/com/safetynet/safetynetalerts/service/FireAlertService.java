@@ -7,12 +7,12 @@ import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class FireAlertService {

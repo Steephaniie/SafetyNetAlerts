@@ -3,14 +3,12 @@ package com.safetynet.safetynetalerts.repository;
 import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.Person;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PersonRepository {
-
 
     private final JsonFileWriter jsonFileWriter;
 

@@ -3,27 +3,26 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
-//import jdk.internal.org.jline.utils.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Classe de test pour le service {@link ChildAlertService}.
+ * Elle vérifie les fonctionnalités en rapport avec la recherche des enfants à une adresse donnée,
+ * ainsi que le calcul de leur âge.
+ */
 @SpringBootTest
 public class ChildAlertServiceTest {
 
@@ -39,9 +38,13 @@ public class ChildAlertServiceTest {
     private List<Person> mockPersons;
     private List<MedicalRecord> mockMedicalRecords;
 
+    /**
+     * Configuration des données de test avant l'exécution de chaque test.
+     * Initialise des listes mockées de personnes et de dossiers médicaux.
+     */
     @BeforeEach
     void setUp() {
-        // Mock des données pour les tests
+        // Initialisation des données mockées pour représenter des personnes et leurs dossiers médicaux
         mockPersons = Arrays.asList(
             new Person("John", "Doe", "123 Main St", "City", "12345", "john.doe@example.com", "123-456-7890"),
             new Person("Jane", "Doe", "123 Main St", "City", "12345", "jane.doe@example.com", "123-456-7891")
@@ -51,14 +54,15 @@ public class ChildAlertServiceTest {
             new MedicalRecord("John", "Doe", Date.from(LocalDate.of(2015, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), Arrays.asList("medication1"), Arrays.asList("allergy1")),
             new MedicalRecord("Jane", "Doe", Date.from(LocalDate.of(1985, 12, 25).atStartOfDay(ZoneId.systemDefault()).toInstant()), Collections.emptyList(), Collections.emptyList())
         );
-//        log.debug("Données de test - John: {}, Jane: {}",
-//                mockMedicalRecords.get(0).getBirthDate(),
-//                mockMedicalRecords.get(1).getBirthDate());
     }
 
+    /**
+     * Teste la méthode {@link ChildAlertService#getChildrenAtAddress(String)}
+     * lorsqu'une adresse contient des enfants.
+     */
     @Test
     void testGetChildrenAtAddress_WithChildren() {
-        // Mock des services
+        // Simulation des services pour fournir des données mockées
         when(personService.getAllPersons()).thenReturn(mockPersons);
         when(medicalRecordService.getAllMedicalRecords()).thenReturn(mockMedicalRecords);
 
@@ -77,9 +81,13 @@ public class ChildAlertServiceTest {
         verify(medicalRecordService, times(1)).getAllMedicalRecords();
     }
 
+    /**
+     * Teste la méthode {@link ChildAlertService#getChildrenAtAddress(String)}
+     * lorsqu'une adresse ne contient aucun enfant (seulement des adultes).
+     */
     @Test
     void testGetChildrenAtAddress_NoChildren() {
-        // Mock des services avec des âges adultes
+        // Simulation des services pour retourner des personnes uniquement adultes
         mockMedicalRecords = Arrays.asList(
                 new MedicalRecord("John", "Doe", Date.from(LocalDate.of(1980, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), Collections.emptyList(), Collections.emptyList()),
                 new MedicalRecord("Jane", "Doe", Date.from(LocalDate.of(1975, 12, 25).atStartOfDay(ZoneId.systemDefault()).toInstant()), Collections.emptyList(), Collections.emptyList())
@@ -97,9 +105,13 @@ public class ChildAlertServiceTest {
         assertTrue(result.getOtherHouseholdMembers().isEmpty());
     }
 
+    /**
+     * Teste la méthode {@link ChildAlertService#getChildrenAtAddress(String)}
+     * lorsqu'une adresse invalide (non trouvée) est spécifiée.
+     */
     @Test
     void testGetChildrenAtAddress_InvalidAddress() {
-        // Lorsque l'adresse n'est pas trouvée
+        // Simulation d'une adresse invalide avec une liste vide de personnes
         when(personService.getAllPersons()).thenReturn(Collections.emptyList());
 
         // Appel de la méthode à tester
@@ -113,9 +125,13 @@ public class ChildAlertServiceTest {
         verify(medicalRecordService, times(1)).getAllMedicalRecords();
     }
 
+    /**
+     * Teste la méthode {@link ChildAlertService#calculateAge(Date)} pour
+     * vérifier que l'âge est correctement calculé à partir d'une date de naissance donnée.
+     */
     @Test
     void testCalculateAge() {
-        // Création d'une date de naissance
+        // Création d'une date de naissance fictive pour le test
         Date birthDate = Date.from(LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         int age = childAlertService.calculateAge(birthDate);
 

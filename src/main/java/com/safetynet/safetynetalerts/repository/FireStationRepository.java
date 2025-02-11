@@ -3,10 +3,14 @@ package com.safetynet.safetynetalerts.repository;
 import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.FireStation;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Classe repository pour gérer les casernes de pompiers avec les opérations CRUD.
+ * Elle interagit avec le fichier JSON pour stocker et récupérer les données.
+ */
 @Service
 public class FireStationRepository {
 
@@ -18,6 +22,9 @@ public class FireStationRepository {
 
     /**
      * Ajouter une nouvelle caserne de pompiers.
+     * <p>
+     * Cette méthode ajoute la caserne spécifiée à la liste des casernes existantes
+     * et stockées dans le fichier JSON.
      *
      * @param fireStation La nouvelle caserne de pompiers à ajouter.
      */
@@ -30,10 +37,14 @@ public class FireStationRepository {
 
     /**
      * Mettre à jour le numéro de la caserne pour une adresse donnée.
+     * <p>
+     * Cette méthode recherche une caserne basée sur l'adresse fournie. Si l'adresse existe,
+     * le numéro de la caserne est mis à jour avec la valeur spécifiée.
+     * La mise à jour est enregistrée dans le fichier JSON.
      *
-     * @param address          L'adresse à mettre à jour.
+     * @param address          L'adresse de la caserne à mettre à jour.
      * @param newStationNumber Le nouveau numéro de la caserne.
-     * @return true si la mise à jour a réussi, false si l'adresse n'a pas été trouvée.
+     * @return true si la mise à jour a réussi, false si aucune caserne à cette adresse n'a été trouvée.
      */
     public boolean updateFireStation(String address, String newStationNumber) {
         List<FireStation> firestations = jsonFileWriter.getFirestations();
@@ -51,9 +62,12 @@ public class FireStationRepository {
 
     /**
      * Supprimer une caserne de pompiers à une adresse donnée.
+     * <p>
+     * Cette méthode supprime une caserne associée à l'adresse spécifiée si elle existe.
+     * Les modifications sont ensuite enregistrées dans le fichier JSON.
      *
      * @param address L'adresse de la caserne à supprimer.
-     * @return true si la caserne a été supprimée, false sinon.
+     * @return true si la caserne a été supprimée avec succès, false sinon.
      */
     public boolean deleteFireStation(String address) {
         List<FireStation> firestations = jsonFileWriter.getFirestations();
@@ -64,8 +78,10 @@ public class FireStationRepository {
 
     /**
      * Obtenir la liste de toutes les casernes de pompiers.
+     * <p>
+     * Cette méthode retourne toutes les casernes de pompiers stockées dans le fichier JSON.
      *
-     * @return La liste des casernes de pompiers.
+     * @return La liste complète des casernes de pompiers.
      */
     public List<FireStation> getAllFireStations() {
         return jsonFileWriter.getFirestations();

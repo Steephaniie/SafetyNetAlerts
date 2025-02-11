@@ -3,12 +3,10 @@ package com.safetynet.safetynetalerts.repository;
 import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
-
 public class MedicalRecordRepository {
     private final JsonFileWriter jsonFileWriter;
 

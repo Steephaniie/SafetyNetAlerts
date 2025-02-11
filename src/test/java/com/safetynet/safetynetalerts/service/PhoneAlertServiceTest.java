@@ -3,19 +3,22 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.PhoneAlertDTO;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.*;
 
+
+/**
+ * Classe de tests pour le service {@link PhoneAlertService}.
+ * Elle contient des tests unitaires pour valider les fonctionnalités liées
+ * à l'obtention des numéros de téléphone par numéro de caserne.
+ */
 @SpringBootTest
 class PhoneAlertServiceTest {
 
@@ -28,9 +31,14 @@ class PhoneAlertServiceTest {
     @MockBean
     private PersonService personService;
 
+    /**
+     * Teste la méthode {@link PhoneAlertService#getPhonesByFireStation(String)}
+     * lorsqu'un numéro de caserne valide est fourni. Vérifie que les numéros
+     * de téléphone correspondants sont correctement extraits.
+     */
     @Test
     void testGetPhonesByFireStation_withValidStationNumber() {
-        // Arrange
+        // Préparation des données de test
         String stationNumber = "1";
 
         List<FireStation> fireStations = Arrays.asList(
@@ -47,7 +55,7 @@ class PhoneAlertServiceTest {
         when(fireStationService.getAllFireStations()).thenReturn(fireStations);
         when(personService.getAllPersons()).thenReturn(persons);
 
-        // Act
+        // Exécution de la méthode à tester
         PhoneAlertDTO result = phoneAlertService.getPhonesByFireStation(stationNumber);
 
         // Assert
@@ -57,9 +65,14 @@ class PhoneAlertServiceTest {
         verify(personService, times(1)).getAllPersons();
     }
 
+    /**
+     * Teste la méthode {@link PhoneAlertService#getPhonesByFireStation(String)}
+     * lorsqu'aucune caserne ne correspond au numéro fourni. Vérifie que
+     * la liste des numéros de téléphone est vide.
+     */
     @Test
     void testGetPhonesByFireStation_withNoMatchingStationNumber() {
-        // Arrange
+        // Préparation des données de test
         String stationNumber = "3";
 
         List<FireStation> fireStations = Arrays.asList(
@@ -79,15 +92,20 @@ class PhoneAlertServiceTest {
         // Act
         PhoneAlertDTO result = phoneAlertService.getPhonesByFireStation(stationNumber);
 
-        // Assert
+        // Vérification des résultats
         assertEquals(Collections.emptyList(), result.getPhoneNumbers());
         verify(fireStationService, times(1)).getAllFireStations();
         verify(personService, times(1)).getAllPersons();
     }
 
+    /**
+     * Teste la méthode {@link PhoneAlertService#getPhonesByFireStation(String)}
+     * lorsqu'aucune adresse n'est associée au numéro de caserne. Vérifie que
+     * la liste des numéros de téléphone est vide.
+     */
     @Test
     void testGetPhonesByFireStation_withNoAddressesFound() {
-        // Arrange
+        // Préparation des données de test
         String stationNumber = "1";
 
         List<FireStation> fireStations = Collections.emptyList();
@@ -108,9 +126,14 @@ class PhoneAlertServiceTest {
         verify(personService, times(1)).getAllPersons();
     }
 
+    /**
+     * Teste la méthode {@link PhoneAlertService#getPhonesByFireStation(String)}
+     * lorsqu'il existe des numéros de téléphone en double. Vérifie que
+     * les numéros de téléphone retournés sont uniques.
+     */
     @Test
     void testGetPhonesByFireStation_withDuplicatePhoneNumbers() {
-        // Arrange
+        // Préparation des données de test
         String stationNumber = "1";
 
         List<FireStation> fireStations = Arrays.asList(
