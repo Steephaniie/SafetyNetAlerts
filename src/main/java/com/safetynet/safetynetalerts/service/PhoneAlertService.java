@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.PhoneAlertDTO;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class PhoneAlertService {
 
-    private static final Logger logger = LoggerFactory.getLogger(PhoneAlertService.class);
 
     private final FireStationService fireStationService;
     private final PersonService personService;
@@ -32,7 +32,7 @@ public class PhoneAlertService {
      * @return Un DTO contenant les numéros de téléphone.
      */
     public PhoneAlertDTO getPhonesByFireStation(String stationNumber) {
-        logger.debug("Appel de getPhonesByFireStation avec stationNumber: {}", stationNumber);
+        log.debug("Appel de getPhonesByFireStation avec stationNumber: {}", stationNumber);
 
         // Récupérer les adresses associées à la caserne
         List<FireStation> fireStations = fireStationService.getAllFireStations();
@@ -40,7 +40,7 @@ public class PhoneAlertService {
                 .filter(fireStation -> fireStation.getStation().equals(stationNumber))
                 .map(FireStation::getAddress)
                 .collect(Collectors.toList());
-        logger.debug("Adresses récupérées pour la caserne {}: {}", stationNumber, addresses);
+        log.debug("Adresses récupérées pour la caserne {}: {}", stationNumber, addresses);
 
         // Récupérer les personnes habitant à ces adresses et leurs numéros de téléphone
         List<Person> persons = personService.getAllPersons();
@@ -49,7 +49,7 @@ public class PhoneAlertService {
                 .map(Person::getPhone)
                 .distinct() // Éviter les doublons
                 .collect(Collectors.toList());
-        logger.debug("Numéros de téléphone récupérés pour la caserne {}: {}", stationNumber, phoneNumbers);
+        log.debug("Numéros de téléphone récupérés pour la caserne {}: {}", stationNumber, phoneNumbers);
 
         return new PhoneAlertDTO(phoneNumbers);
     }

@@ -223,6 +223,9 @@
   }, {
     "address" : "951 LoneTree Rd",
     "station" : "2"
+  }, {
+    "address" : "15 Pic St",
+    "station" : "3"
   } ],
   "medicalrecords" : [ {
     "firstName" : "John",

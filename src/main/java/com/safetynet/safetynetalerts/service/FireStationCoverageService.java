@@ -50,10 +50,9 @@ public class FireStationCoverageService {
 
         // Si aucune caserne ne correspond, lever une exception 404
         if (coveredAddresses.isEmpty()) {
-            log.warn("Aucune caserne trouvée pour le numéro de station : {}", stationNumber);
+            log.debug("Aucune caserne trouvée pour le numéro de station : {}", stationNumber);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fire station not found");
         }
-
         log.debug("Adresses couvertes récupérées pour la caserne {}: {}", stationNumber, coveredAddresses);
 
         // Récupérer toutes les personnes habitants aux adresses couvertes

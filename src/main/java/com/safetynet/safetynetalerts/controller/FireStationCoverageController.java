@@ -44,9 +44,7 @@ public class FireStationCoverageController {
             @ApiResponse(responseCode = "400", description = "Requête invalide."),
             @ApiResponse(responseCode = "404", description = "Ressource non trouvée.")
     })
-    public FireStationCoverageDTO getCoverageByStationNumber(
-            @RequestParam("stationNumber") String stationNumber
-    ) {
+    public FireStationCoverageDTO getCoverageByStationNumber(@RequestParam("stationNumber") String stationNumber ) {
         log.info("api getCoverageByStationNumber ok");
         return fireStationCoverageService.getCoverageByStationNumber(stationNumber);
     }

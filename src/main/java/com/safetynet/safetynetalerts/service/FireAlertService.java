@@ -5,20 +5,17 @@ import com.safetynet.safetynetalerts.dto.FireAlertDTO.ResidentInfo;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class FireAlertService {
-
-    private static final Logger logger = LoggerFactory.getLogger(FireAlertService.class);
 
     private final PersonService personService;
     private final MedicalRecordService medicalRecordService;
@@ -37,13 +34,13 @@ public class FireAlertService {
      * @return Un DTO FireAlertDTO avec les informations des habitants et du numéro de caserne.
      */
     public FireAlertDTO getFireAlertByAddress(String address) {
-        logger.debug("Début de la méthode getFireAlertByAddress pour l'adresse : {}", address);
+        log.debug("Début de la méthode getFireAlertByAddress pour l'adresse : {}", address);
 
         // Récupérer toutes les personnes habitant à cette adresse
         List<Person> personsAtAddress = personService.getAllPersons().stream()
                 .filter(person -> address.equals(person.getAddress()))
-                .collect(Collectors.toList());
-        logger.debug("Nombre de personnes trouvées à l'adresse {} : {}", address, personsAtAddress.size());
+                .toList();
+        log.debug("Nombre de personnes trouvées à l'adresse {} : {}", address, personsAtAddress.size());
 
         // Récupérer tous les dossiers médicaux pour les personnes de cette adresse
         List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
@@ -55,9 +52,9 @@ public class FireAlertService {
                 .findFirst()
                 .orElse(null); // Adresse non couverte par une caserne
         if (fireStationNumber != null) {
-            logger.debug("La caserne couvrant l'adresse {} a été trouvée avec le numéro : {}", address, fireStationNumber);
+            log.debug("La caserne couvrant l'adresse {} a été trouvée avec le numéro : {}", address, fireStationNumber);
         } else {
-            logger.debug("Aucune caserne trouvée pour l'adresse : {}", address);
+            log.debug("Aucune caserne trouvée pour l'adresse : {}", address);
         }
 
         // Construire la liste des habitants avec leurs informations détaillées
@@ -68,10 +65,6 @@ public class FireAlertService {
                                     && record.getLastName().equals(person.getLastName()))
                             .findFirst()
                             .orElse(null);
-           //     })
-          //      .collect(Collectors.toList());
-                    //todo
-//        logger.debug("Nombre d'habitants inclus avec leurs informations détaillées : {}", residents.size());
 
         if (medicalRecord != null) {
                         int age = calculateAge(medicalRecord.getBirthDate());
@@ -97,7 +90,7 @@ public class FireAlertService {
 
         // Retourner le DTO avec les informations collectées
         FireAlertDTO fireAlertDTO = new FireAlertDTO(fireStationNumber, residents);
-        logger.debug("Fin de la méthode getFireAlertByAddress pour l'adresse {} : DTO construit avec succès",address);
+        log.debug("Fin de la méthode getFireAlertByAddress pour l'adresse {} : DTO construit avec succès",address);
         return fireAlertDTO;
 }
 

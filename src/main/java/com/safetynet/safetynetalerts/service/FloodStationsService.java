@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.dto.FloodStationsDTO.HouseholdInfo;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.FireStation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +14,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class FloodStationsService {
 
     private final PersonService personService;
     private final FireStationService fireStationService;
     private final MedicalRecordService medicalRecordService;
-
-    private static final Logger logger = LoggerFactory.getLogger(FloodStationsService.class);
 
     public FloodStationsService(PersonService personService,
                                 FireStationService fireStationService,
@@ -38,25 +37,25 @@ public class FloodStationsService {
      * @return Un DTO contenant les informations des foyers regroupés par adresse.
      */
     public FloodStationsDTO getHouseholdsByStations(List<String> stationNumbers) {
-        logger.debug("Appel de la méthode getHouseholdsByStations avec les numéros de casernes : {}", stationNumbers);
+        log.debug("Appel de la méthode getHouseholdsByStations avec les numéros de casernes : {}", stationNumbers);
         // Récupérer toutes les casernes couvertes par les numéros spécifiés
         List<FireStation> fireStations = fireStationService.getAllFireStations();
         List<String> coveredAddresses = fireStations.stream()
                 .filter(fireStation -> stationNumbers.contains(fireStation.getStation())) // Casernes concernées
                 .map(FireStation::getAddress) // Adresses couvertes
                 .collect(Collectors.toList());
-        logger.debug("Adresses couvertes récupérées : {}", coveredAddresses);
+        log.debug("Adresses couvertes récupérées : {}", coveredAddresses);
 
         // Récupérer les personnes vivant à ces adresses
         List<Person> allPersons = personService.getAllPersons();
         List<Person> filteredPersons = allPersons.stream()
                 .filter(person -> coveredAddresses.contains(person.getAddress()))
                 .collect(Collectors.toList());
-        logger.debug("Personnes récupérées pour les adresses couvertes : {}", filteredPersons);
+        log.debug("Personnes récupérées pour les adresses couvertes : {}", filteredPersons);
 
         // Récupérer tous les dossiers médicaux
         List<MedicalRecord> allMedicalRecords = medicalRecordService.getAllMedicalRecords();
-        logger.debug("Nombre total de dossiers médicaux récupérés : {}", allMedicalRecords.size());
+        log.debug("Nombre total de dossiers médicaux récupérés : {}", allMedicalRecords.size());
 
         // Grouper les informations par adresse
         Map<String, List<HouseholdInfo>> householdsByAddress = filteredPersons.stream()
@@ -81,10 +80,10 @@ public class FloodStationsService {
                             );
                         }, Collectors.toList())
                 ));
-        logger.debug("Foyers regroupés par adresse : {}", householdsByAddress);
+        log.debug("Foyers regroupés par adresse : {}", householdsByAddress);
 
         FloodStationsDTO floodStationsDTO = new FloodStationsDTO(householdsByAddress);
-        logger.debug("Retour des informations des foyers desservis : {}", floodStationsDTO);
+        log.debug("Retour des informations des foyers desservis : {}", floodStationsDTO);
         return floodStationsDTO;
     }
 

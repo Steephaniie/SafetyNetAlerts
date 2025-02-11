@@ -4,7 +4,6 @@ import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class PersonService {
         boolean isDeleted = personRepository.deletePerson(firstName, lastName);
 
         if (!isDeleted) {
-            log.warn("Personne non trouvée pour suppression : prénom={}, nom={}", firstName, lastName);
+            log.debug("Personne non trouvée pour suppression : prénom={}, nom={}", firstName, lastName);
             return false;
         }
 
