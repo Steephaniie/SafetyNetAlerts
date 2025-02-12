@@ -48,12 +48,6 @@
 		<version>1.18.34</version>
 		<scope>provided</scope>
 	</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.projectlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--			<version>1.18.34</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok-mapstruct-binding</artifactId>
@@ -115,17 +109,6 @@
 					<excludes>
 						<exclude>**/integration/**</exclude>
 					</excludes>
-<!--						<configuration>-->
-<!--					<annotationProcessorPaths>-->
-<!--						<path>-->
-<!--							<groupId>org.projectlombok</groupId>-->
-<!--							<artifactId>lombok</artifactId>-->
-<!--						</path>-->
-<!--						<path>-->
-<!--							<groupId>org.springframework.boot</groupId>-->
-<!--							<artifactId>spring-boot-configuration-processor</artifactId>-->
-<!--						</path>-->
-<!--					</annotationProcessorPaths>-->
 				</configuration>
 			</plugin>
 			<plugin>
