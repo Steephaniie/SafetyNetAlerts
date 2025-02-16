@@ -9,9 +9,11 @@ import com.safetynet.safetynetalerts.model.Person;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+
 import static org.mockito.Mockito.*;
 
 
@@ -22,8 +24,6 @@ import static org.mockito.Mockito.*;
  */
 @SpringBootTest
 class JsonFileWriterTest {
-
-    private static final String JSON_FILE_PATH = "src/main/resources/data.json";
 
     /**
      * Teste la méthode writeToFile pour s'assurer qu'elle écrit des données valides dans un fichier JSON.

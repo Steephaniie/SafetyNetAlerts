@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +46,7 @@ class MedicalRecordServiceTest {
     @Test
     void testAddMedicalRecord() throws ParseException {
         // Préparation des données
-        MedicalRecord medicalRecord = new MedicalRecord("John", "Doe", dateFormat.parse("01/01/2000"), Arrays.asList("Aspirin"), Arrays.asList("Peanut allergy"));
+        MedicalRecord medicalRecord = new MedicalRecord("John", "Doe", dateFormat.parse("01/01/2000"), List.of("Aspirin"), List.of("Peanut allergy"));
 
         // Exécution de l'action
         medicalRecordService.addMedicalRecord(medicalRecord);
@@ -63,7 +65,7 @@ class MedicalRecordServiceTest {
         // Préparation des données
         String firstName = "John";
         String lastName = "Doe";
-        MedicalRecord updatedMedicalRecord = new MedicalRecord(firstName, lastName, dateFormat.parse("02/02/2001"), Arrays.asList("Ibuprofen"), Arrays.asList("None"));
+        MedicalRecord updatedMedicalRecord = new MedicalRecord(firstName, lastName, dateFormat.parse("02/02/2001"), List.of("Ibuprofen"), List.of("None"));
         when(medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord)).thenReturn(true);
 
         // Exécution de l'action
@@ -84,7 +86,7 @@ class MedicalRecordServiceTest {
         // Arrange
         String firstName = "John";
         String lastName = "Doe";
-        MedicalRecord updatedMedicalRecord = new MedicalRecord(firstName, lastName, dateFormat.parse("02/02/2001"), Arrays.asList("Ibuprofen"), Arrays.asList("None"));
+        MedicalRecord updatedMedicalRecord = new MedicalRecord(firstName, lastName, dateFormat.parse("02/02/2001"), List.of("Ibuprofen"), List.of("None"));
         when(medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord)).thenReturn(false);
 
         // Act
@@ -144,8 +146,8 @@ class MedicalRecordServiceTest {
     void testGetAllMedicalRecords() throws ParseException {
         // Préparation des données
         List<MedicalRecord> medicalRecords = Arrays.asList(
-                new MedicalRecord("John", "Doe", dateFormat.parse("01/01/2000"), Arrays.asList("Aspirin"), Arrays.asList("Peanut allergy")),
-                new MedicalRecord("Jane", "Smith", dateFormat.parse("03/04/1990"), Arrays.asList("Tylenol"), Arrays.asList("None"))
+                new MedicalRecord("John", "Doe", dateFormat.parse("01/01/2000"), List.of("Aspirin"), List.of("Peanut allergy")),
+                new MedicalRecord("Jane", "Smith", dateFormat.parse("03/04/1990"), List.of("Tylenol"), List.of("None"))
         );
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(medicalRecords);
 

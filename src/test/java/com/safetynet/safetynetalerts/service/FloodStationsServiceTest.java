@@ -2,15 +2,20 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.dto.FloodStationsDTO;
 import com.safetynet.safetynetalerts.dto.FloodStationsDTO.HouseholdInfo;
-import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.FireStation;
+import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
 import org.junit.jupiter.api.Test;
-import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -60,7 +65,7 @@ class FloodStationsServiceTest {
                 new MedicalRecord("John", "Doe", new Date(System.currentTimeMillis() - 1000000000L),
                         Arrays.asList("Allergy1", "Allergy2"), Arrays.asList("Med1", "Med2")),
                 new MedicalRecord("Jane", "Smith", new Date(System.currentTimeMillis() - 2000000000L),
-                        Collections.emptyList(),Arrays.asList("Med3"))
+                        Collections.emptyList(), List.of("Med3"))
         );
         when(medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecords);
 
@@ -89,7 +94,7 @@ class FloodStationsServiceTest {
         assertEquals("Jane", household2.get(0).getFirstName());
         assertEquals("Smith", household2.get(0).getLastName());
         assertEquals("222-222-2222", household2.get(0).getPhone());
-        assertEquals(Arrays.asList("Med3"), household2.get(0).getMedications());
+        assertEquals(List.of("Med3"), household2.get(0).getMedications());
         assertEquals(Collections.emptyList(), household2.get(0).getAllergies());
 
         // Vérifie que les services mockés ont été appelés le nombre de fois attendu

@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -51,7 +53,7 @@ public class ChildAlertServiceTest {
         );
 
         mockMedicalRecords = Arrays.asList(
-            new MedicalRecord("John", "Doe", Date.from(LocalDate.of(2015, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), Arrays.asList("medication1"), Arrays.asList("allergy1")),
+            new MedicalRecord("John", "Doe", Date.from(LocalDate.of(2015, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), List.of("medication1"), List.of("allergy1")),
             new MedicalRecord("Jane", "Doe", Date.from(LocalDate.of(1985, 12, 25).atStartOfDay(ZoneId.systemDefault()).toInstant()), Collections.emptyList(), Collections.emptyList())
         );
     }

@@ -48,8 +48,7 @@ public class JsonFileWriter {
             firestations = fichierJsonDTO.getFirestations();
             medicalrecords = fichierJsonDTO.getMedicalrecords();
         } catch (IOException e) {
-            log.error ("JsonFileWriter - erreur lors du chargement des données");
-            e.printStackTrace();
+            log.error("JsonFileWriter - erreur lors du chargement des données : {}", e.getMessage());
         }
     }
 
@@ -66,8 +65,7 @@ public class JsonFileWriter {
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(JSON_FILE_PATH), fichierJsonDTO);
         } catch (IOException e) {
-            log.error("writeToFile - erreur lors de la sauvegarde dans le fichier JSON");
-            e.printStackTrace();
+            log.error("writeToFile - erreur lors de la sauvegarde dans le fichier JSON{}", e.getMessage());
             throw new RuntimeException("Erreur lors de la sauvegarde dans le fichier JSON.");
         }
     }

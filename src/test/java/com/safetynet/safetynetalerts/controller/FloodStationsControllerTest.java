@@ -10,11 +10,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Classe de test pour le contrôleur FloodStationsController.
@@ -39,11 +43,11 @@ class FloodStationsControllerTest {
         // Simule les données représentant householdsByAddress à renvoyer par le service
         mockResponse.setHouseholdsByAddress(Map.of(
                 "Address 1", Arrays.asList(
-                        new FloodStationsDTO.HouseholdInfo("John", "Doe", "123-456", 30, Arrays.asList("Med1"), Arrays.asList("Allergy1")),
-                        new FloodStationsDTO.HouseholdInfo("Jane", "Doe", "789-012", 25, Arrays.asList("Med2"), Arrays.asList("Allergy2"))
+                        new FloodStationsDTO.HouseholdInfo("John", "Doe", "123-456", 30, List.of("Med1"), List.of("Allergy1")),
+                        new FloodStationsDTO.HouseholdInfo("Jane", "Doe", "789-012", 25, List.of("Med2"), List.of("Allergy2"))
                 ),
-                "Address 2", Arrays.asList(
-                        new FloodStationsDTO.HouseholdInfo("Alice", "Smith", "345-678", 40, Arrays.asList("Med3"), Arrays.asList("Allergy3"))
+                "Address 2", List.of(
+                        new FloodStationsDTO.HouseholdInfo("Alice", "Smith", "345-678", 40, List.of("Med3"), List.of("Allergy3"))
                 )
         ));
     }

@@ -14,7 +14,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,7 +36,7 @@ public class ChildAlertService {
         List<Person> allPersons = personService.getAllPersons();
         List<Person> personsAtAddress = allPersons.stream()
                 .filter(person -> address.equals(person.getAddress()))
-                .collect(Collectors.toList());
+                .toList();
         log.debug("Nombre de personnes trouvées à l'adresse {} : {}", address, personsAtAddress.size()); // Nombre de personnes trouvées
 
         // Récupérer les dossiers médicaux pour ces personnes

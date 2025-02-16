@@ -33,7 +33,7 @@ public class PersonInfoService {
         // Récupérer toutes les personnes avec le nom spécifié
         List<Person> personsWithLastName = personService.getAllPersons().stream()
                 .filter(person -> person.getLastName().equalsIgnoreCase(lastName))
-                .collect(Collectors.toList());
+                .toList();
         log.debug("Nombre de personnes trouvées avec le nom de famille {} : {}", lastName, personsWithLastName.size());
 
         // Récupérer tous les dossiers médicaux
