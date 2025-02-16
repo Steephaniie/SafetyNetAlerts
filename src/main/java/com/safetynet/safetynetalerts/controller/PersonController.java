@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class PersonController {
     })
     public ResponseEntity<Person> addPerson(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails de la personne à ajouter.")
-            @RequestBody Person person) {
+            @Valid @RequestBody Person person) {
         try {
             Person createdPerson = personService.addPerson(person);
             log.info("api addPerson ok");

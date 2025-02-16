@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class FireStationController {
     })
     public ResponseEntity<String> addFireStation(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Détails de la nouvelle correspondance caserne/adresse à ajouter.")
-            @RequestBody FireStation fireStation) {
+            @Valid @RequestBody FireStation fireStation) {
         fireStationService.addFireStation(fireStation);
         log.info("api addFireStation ok ");
         return ResponseEntity.ok("Caserne ajoutée avec succès.");

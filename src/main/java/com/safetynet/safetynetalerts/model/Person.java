@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Person {
 
+    @NotBlank(message = "Le prénom ne peut pas être vide.")
     private String firstName;
+    @NotBlank(message = "Le nom ne peut pas être vide.")
     private String lastName;
     private String address;
     private String city;
