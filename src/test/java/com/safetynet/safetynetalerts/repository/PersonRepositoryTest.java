@@ -36,6 +36,10 @@ class PersonRepositoryTest {
         mockPersonList.add(new Person("Jane", "Smith", "456 Elm St", "Los Angeles", "54321", "987-654-3210", "jane.smith@email.com"));
     }
 
+    /**
+     * Vérifie que l'ajout d'une personne dans la liste fonctionne correctement.
+     * La personne ajoutée doit être présente dans la liste et les données mises à jour.
+     */
     @Test
     void addPerson_ShouldAddPerson() {
         // Given
@@ -51,6 +55,10 @@ class PersonRepositoryTest {
         assertTrue(mockPersonList.contains(newPerson));
     }
 
+    /**
+     * Vérifie que la mise à jour des informations d'une personne existante est réalisée avec succès.
+     * La nouvelle adresse et l'email doivent être correctement mis à jour.
+     */
     @Test
     void updatePerson_ShouldUpdateExistingPerson() {
         // Given
@@ -67,6 +75,10 @@ class PersonRepositoryTest {
         verify(jsonFileWriter, times(1)).setPersons(mockPersonList);
     }
 
+    /**
+     * Vérifie que la mise à jour retourne null lorsqu'aucune personne correspondante n'est trouvée.
+     * Aucune modification ne doit être effectuée dans ce cas.
+     */
     @Test
     void updatePerson_ShouldReturnNullIfPersonNotFound() {
         // Given
@@ -81,6 +93,10 @@ class PersonRepositoryTest {
         verify(jsonFileWriter, never()).setPersons(mockPersonList);
     }
 
+    /**
+     * Vérifie que la suppression d'une personne existante dans la liste fonctionne correctement.
+     * La personne doit être retirée de la liste après suppression.
+     */
     @Test
     void deletePerson_ShouldRemovePerson() {
         // Given
@@ -94,6 +110,10 @@ class PersonRepositoryTest {
         assertTrue(isDeleted);
     }
 
+    /**
+     * Vérifie que la suppression retourne false lorsqu'aucune personne correspondante n'est trouvée.
+     * Aucune modification ne doit être effectuée dans ce cas.
+     */
     @Test
     void deletePerson_ShouldReturnFalseIfPersonNotFound() {
         // Given
@@ -107,6 +127,10 @@ class PersonRepositoryTest {
 //        verify(jsonFileWriter, never()).setPersons(mockPersonList);
     }
 
+    /**
+     * Vérifie que la liste complète des personnes stockées est retournée correctement.
+     * La liste retournée doit contenir toutes les personnes enregistrées.
+     */
     @Test
     void getAllPersons_ShouldReturnListOfPersons() {
         // Given

@@ -40,6 +40,12 @@ class MedicalRecordRepositoryTest {
         when(jsonFileWriter.getMedicalrecords()).thenReturn(medicalRecords);
     }
 
+    /**
+     * Teste l'ajout d'un nouveau dossier médical.
+     * <p>
+     * Cette méthode vérifie que le nouveau dossier médical est correctement ajouté
+     * à la liste existante et que cela est bien enregistré via le writer JSON.
+     */
     @Test
     void testAddMedicalRecord() {
         // Initialisation
@@ -53,6 +59,12 @@ class MedicalRecordRepositoryTest {
         verify(jsonFileWriter, times(1)).setMedicalrecords(medicalRecords);
     }
 
+    /**
+     * Teste la mise à jour d'un dossier médical existant.
+     * <p>
+     * Cas de succès où un dossier médical existant est mis à jour avec de nouvelles valeurs
+     * et où l'opération est correctement enregistrée.
+     */
     @Test
     void testUpdateMedicalRecord_Success() {
         // Initialisation
@@ -67,6 +79,12 @@ class MedicalRecordRepositoryTest {
         verify(jsonFileWriter, times(1)).setMedicalrecords(medicalRecords);
     }
 
+    /**
+     * Teste la mise à jour d'un dossier médical qui n'existe pas.
+     * <p>
+     * Cas d'échec où la tentative de mise à jour échoue car le dossier recherché
+     * n'est pas présent dans la liste.
+     */
     @Test
     void testUpdateMedicalRecord_Failure() {
         // Initialisation
@@ -80,6 +98,12 @@ class MedicalRecordRepositoryTest {
         verify(jsonFileWriter, never()).setMedicalrecords(any());
     }
 
+    /**
+     * Teste la suppression réussie d'un dossier médical.
+     * <p>
+     * Vérifie qu'un dossier médical existant est correctement supprimé de la liste
+     * et que la suppression est bien enregistrée.
+     */
     @Test
     void testDeleteMedicalRecord_Success() {
         // Appel de la méthode
@@ -91,6 +115,12 @@ class MedicalRecordRepositoryTest {
         verify(jsonFileWriter, times(1)).setMedicalrecords(medicalRecords);
     }
 
+    /**
+     * Teste l'échec de la suppression d'un dossier médical.
+     * <p>
+     * Vérifie qu'une tentative de suppression échoue lorsqu'aucun dossier médical
+     * correspondant n'est trouvé dans la liste.
+     */
     @Test
     void testDeleteMedicalRecord_Failure() {
         // Appel de la méthode
@@ -101,6 +131,12 @@ class MedicalRecordRepositoryTest {
         assertEquals(1, medicalRecords.size(), "La liste devrait toujours contenir un élément.");
     }
 
+    /**
+     * Teste la récupération de tous les dossiers médicaux.
+     * <p>
+     * Vérifie que la méthode renvoie la liste complète des dossiers médicaux
+     * actuellement stockés.
+     */
     @Test
     void testGetMedicalRecords() {
         // Appel de la méthode
