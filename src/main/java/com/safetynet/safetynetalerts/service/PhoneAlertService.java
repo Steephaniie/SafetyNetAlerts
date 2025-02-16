@@ -3,24 +3,20 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.PhoneAlertDTO;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PhoneAlertService {
 
     private final FireStationService fireStationService;
     private final PersonService personService;
-
-    @Autowired
-    public PhoneAlertService(FireStationService fireStationService, PersonService personService) {
-        this.fireStationService = fireStationService;
-        this.personService = personService;
-    }
 
     /**
      * Récupère la liste des numéros de téléphone des résidents couverts par une caserne spécifique.

@@ -1,10 +1,12 @@
 package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.dto.PersonInfoDTO;
-import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -13,15 +15,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PersonInfoService {
 
     private final PersonService personService;
     private final MedicalRecordService medicalRecordService;
-
-    public PersonInfoService(PersonService personService, MedicalRecordService medicalRecordService) {
-        this.personService = personService;
-        this.medicalRecordService = medicalRecordService;
-    }
 
     /**
      * Récupère les informations des personnes correspondant à un nom de famille donné.

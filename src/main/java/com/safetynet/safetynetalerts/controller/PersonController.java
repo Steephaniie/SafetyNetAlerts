@@ -2,30 +2,27 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.service.PersonService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/person")
 @Tag(name = "Person Controller", description = "Gestion des informations des personnes.")
+@AllArgsConstructor
 public class PersonController {
 
     private final PersonService personService;
-
-    @Autowired
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
 
     /**
      * Endpoint GET : Récupérer toutes les personnes.
@@ -45,6 +42,7 @@ public class PersonController {
 
     /**
      * Endpoint POST : Ajouter une nouvelle personne.
+     *
      * @param person La personne à ajouter.
      * @return La personne ajoutée avec un statut HTTP 201.
      */
@@ -62,15 +60,16 @@ public class PersonController {
             log.info("api addPerson ok");
             return new ResponseEntity<>(createdPerson, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            log.error("api addPerson ko"+e.getMessage());
+            log.error("api addPerson ko" + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Endpoint PUT : Mettre à jour une personne existante.
-     * @param firstName Le prénom de la personne.
-     * @param lastName Le nom de la personne.
+     *
+     * @param firstName     Le prénom de la personne.
+     * @param lastName      Le nom de la personne.
      * @param updatedPerson Les nouvelles données pour la personne.
      * @return La personne mise à jour ou un statut HTTP 404 si la personne n'existe pas.
      */
@@ -88,7 +87,7 @@ public class PersonController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nouvelles informations pour la personne.")
             @RequestBody Person updatedPerson) {
 
-            Person updated = personService.updatePerson(firstName, lastName, updatedPerson);
+        Person updated = personService.updatePerson(firstName, lastName, updatedPerson);
 
         if (updated == null) {
             log.error("api updatePerson ko - Personne non trouvée");
@@ -100,8 +99,9 @@ public class PersonController {
 
     /**
      * Endpoint DELETE : Supprimer une personne.
+     *
      * @param firstName Le prénom de la personne à supprimer.
-     * @param lastName Le nom de la personne à supprimer.
+     * @param lastName  Le nom de la personne à supprimer.
      * @return Un statut HTTP 200 si la personne est supprimée, ou 404 si elle n'existe pas.
      */
     @DeleteMapping("/{firstName}/{lastName}")

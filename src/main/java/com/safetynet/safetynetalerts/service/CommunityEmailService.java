@@ -2,20 +2,19 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.dto.CommunityEmailDTO;
 import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class CommunityEmailService {
 
     private final PersonService personService;
-
-    public CommunityEmailService(PersonService personService) {
-        this.personService = personService;
-    }
 
     /**
      * Récupère les adresses email de toutes les personnes vivant dans une ville spécifiée.

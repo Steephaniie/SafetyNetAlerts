@@ -59,8 +59,5 @@ class JsonFileWriterTest {
         // Étape 5 : Appel de la méthode à tester
         jsonFileWriter.writeToFile();
 
-        // Étape 6 : Vérification que les mocks ont été correctement appelés (désactivé ici)
-//        verify(mockObjectMapper).writerWithDefaultPrettyPrinter();
-//        verify(mockObjectWriter).writeValue(any(File.class), eq(fichierJsonDTO));
     }
 }

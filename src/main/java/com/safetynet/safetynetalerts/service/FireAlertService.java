@@ -3,10 +3,12 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
 import com.safetynet.safetynetalerts.dto.FireAlertDTO.ResidentInfo;
 import com.safetynet.safetynetalerts.model.FireStation;
-import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -15,17 +17,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class FireAlertService {
 
     private final PersonService personService;
     private final MedicalRecordService medicalRecordService;
     private final FireStationService fireStationService;
-
-    public FireAlertService(PersonService personService, MedicalRecordService medicalRecordService, FireStationService fireStationService) {
-        this.personService = personService;
-        this.medicalRecordService = medicalRecordService;
-        this.fireStationService = fireStationService;
-    }
 
     /**
      * Récupère les détails des habitants et le numéro de caserne pour une adresse donnée.

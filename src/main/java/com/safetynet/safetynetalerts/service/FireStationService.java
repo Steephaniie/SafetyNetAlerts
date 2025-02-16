@@ -2,19 +2,18 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.repository.FireStationRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class FireStationService {
 
     private final FireStationRepository fireStationRepository;
-
-    public FireStationService(FireStationRepository fireStationRepository) {
-        this.fireStationRepository = fireStationRepository;
-    }
 
     /**
      * Ajouter une nouvelle caserne de pompiers.

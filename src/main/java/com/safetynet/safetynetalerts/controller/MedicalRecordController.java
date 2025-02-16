@@ -8,23 +8,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/medicalRecord")
 @Tag(name = "MedicalRecordController", description = "Gestion des dossiers médicaux.")
+@AllArgsConstructor
 public class MedicalRecordController {
 
     private final MedicalRecordService medicalRecordService;
-
-    public MedicalRecordController(MedicalRecordService medicalRecordService) {
-        this.medicalRecordService = medicalRecordService;
-    }
 
     /**
      * Ajouter un nouveau dossier médical.
@@ -70,7 +69,7 @@ public class MedicalRecordController {
             log.info("api updateMedicalRecord ok");
             return ResponseEntity.ok("Dossier médical mis à jour avec succès.");
         } else {
-            log.info ("api updateMedicalRecord ko - dossier non trouvé pour mise à jour");
+            log.info("api updateMedicalRecord ko - dossier non trouvé pour mise à jour");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dossier médical non trouvé pour mise à jour.");
         }
     }
@@ -93,10 +92,10 @@ public class MedicalRecordController {
             @Parameter(description = "Nom de famille de la personne.") @PathVariable String lastName) {
         boolean isDeleted = medicalRecordService.deleteMedicalRecord(firstName, lastName);
         if (isDeleted) {
-           log.info("api deleteMedicalRecord ok");
+            log.info("api deleteMedicalRecord ok");
             return ResponseEntity.ok("Dossier médical supprimé avec succès.");
         } else {
-            log.info( "api deleteMedicalRecord ko - dossier médical non trouvé pour suppression ");
+            log.info("api deleteMedicalRecord ko - dossier médical non trouvé pour suppression ");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dossier médical non trouvé pour suppression.");
         }
     }

@@ -2,19 +2,16 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class MedicalRecordRepository {
     private final JsonFileWriter jsonFileWriter;
-
-    public MedicalRecordRepository(JsonFileWriter jsonFileWriter) {
-        this.jsonFileWriter = jsonFileWriter;
-    }
-//    private List<MedicalRecord> medicalrecords;
-
 
     /**
      * Ajouter un dossier médical

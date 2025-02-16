@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
 
 
@@ -27,7 +28,6 @@ public class ChildAlertDTO {
     @Setter
     @AllArgsConstructor
     public static class ChildInfo {
-
         private String firstName;
         private String lastName;
         private int age;

@@ -2,31 +2,29 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.dto.FloodStationsDTO;
 import com.safetynet.safetynetalerts.dto.FloodStationsDTO.HouseholdInfo;
-import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.FireStation;
+import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class FloodStationsService {
 
     private final PersonService personService;
     private final FireStationService fireStationService;
     private final MedicalRecordService medicalRecordService;
-
-    public FloodStationsService(PersonService personService,
-                                FireStationService fireStationService,
-                                MedicalRecordService medicalRecordService) {
-        this.personService = personService;
-        this.fireStationService = fireStationService;
-        this.medicalRecordService = medicalRecordService;
-    }
 
     /**
      * Récupère les foyers desservis par les casernes spécifiées.

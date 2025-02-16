@@ -2,7 +2,9 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.FireStation;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +14,10 @@ import java.util.Optional;
  * Elle interagit avec le fichier JSON pour stocker et récupérer les données.
  */
 @Service
+@AllArgsConstructor
 public class FireStationRepository {
 
     private final JsonFileWriter jsonFileWriter;
-
-    public FireStationRepository(JsonFileWriter jsonFileWriter) {
-        this.jsonFileWriter = jsonFileWriter;
-    }
 
     /**
      * Ajouter une nouvelle caserne de pompiers.

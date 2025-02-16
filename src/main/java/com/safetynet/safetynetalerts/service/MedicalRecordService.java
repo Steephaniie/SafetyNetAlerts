@@ -2,19 +2,18 @@ package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class MedicalRecordService {
     
     private final MedicalRecordRepository medicalRecordRepository;
-
-    public MedicalRecordService(MedicalRecordRepository medicalRecordRepository) {
-        this.medicalRecordRepository = medicalRecordRepository;
-    }
 
     /**
      * Ajouter un nouveau dossier médical.

@@ -5,10 +5,12 @@ import com.safetynet.safetynetalerts.dto.FireStationCoverageDTO.PersonInfo;
 import com.safetynet.safetynetalerts.model.FireStation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -18,19 +20,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class FireStationCoverageService {
 
     private final FireStationService fireStationService;
     private final PersonService personService;
     private final MedicalRecordService medicalRecordService;
-
-    public FireStationCoverageService(FireStationService fireStationService, 
-                                       PersonService personService,
-                                       MedicalRecordService medicalRecordService) {
-        this.fireStationService = fireStationService;
-        this.personService = personService;
-        this.medicalRecordService = medicalRecordService;
-    }
 
     /**
      * Récupère la couverture d'une caserne donnée par son numéro.
