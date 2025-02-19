@@ -56,7 +56,7 @@ public class PersonInfoService {
                     }
 
                     // Calculer l'âge depuis la date de naissance
-                    int age = (medicalRecord != null) ? calculateAge(medicalRecord.getBirthDate()) : 0;
+                    int age = (medicalRecord != null) ? calculateAge(medicalRecord.getBirthdate()) : 0;
 
                     PersonInfoDTO personInfoDTO = new PersonInfoDTO(
                             person.getFirstName(),

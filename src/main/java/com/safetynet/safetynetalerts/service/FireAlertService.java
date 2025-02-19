@@ -64,7 +64,7 @@ public class FireAlertService {
                             .orElse(null);
 
         if (medicalRecord != null) {
-                        int age = calculateAge(medicalRecord.getBirthDate());
+                        int age = calculateAge(medicalRecord.getBirthdate());
                         return new ResidentInfo(
                                 person.getFirstName(),
                                 person.getLastName(),

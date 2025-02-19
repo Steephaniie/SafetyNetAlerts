@@ -4,8 +4,6 @@ import com.safetynet.safetynetalerts.json.JsonFileWriter;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,7 +73,7 @@ class MedicalRecordRepositoryTest {
 
         // Vérification
         assertTrue(result, "La mise à jour devrait réussir.");
-        assertEquals(new Date(2001,1,1), medicalRecords.get(0).getBirthDate());
+        assertEquals(new Date(2001,1,1), medicalRecords.get(0).getBirthdate());
         verify(jsonFileWriter, times(1)).setMedicalrecords(medicalRecords);
     }
 

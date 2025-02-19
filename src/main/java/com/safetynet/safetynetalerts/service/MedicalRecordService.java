@@ -22,10 +22,10 @@ public class MedicalRecordService {
      */
     public void addMedicalRecord(MedicalRecord medicalRecord) {
         log.debug("Tentative d'ajout d'un dossier médical : {} {} - Date de naissance : {}",
-                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthDate());
+                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
         medicalRecordRepository.addMedicalRecord(medicalRecord);
         log.debug("Dossier médical ajouté avec succès : {} {} - Date de naissance : {}",
-                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthDate());
+                medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
     }
 
     /**
@@ -38,11 +38,11 @@ public class MedicalRecordService {
      */
     public boolean updateMedicalRecord(String firstName, String lastName, MedicalRecord updatedMedicalRecord) {
         log.debug("Tentative de mise à jour du dossier médical pour : {} {} - Nouvelle date de naissance : {}",
-                firstName, lastName, updatedMedicalRecord.getBirthDate());
+                firstName, lastName, updatedMedicalRecord.getBirthdate());
         boolean isUpdated = medicalRecordRepository.updateMedicalRecord(firstName, lastName, updatedMedicalRecord);
         if (isUpdated) {
             log.debug("Mise à jour réussie du dossier médical pour : {} {} - Nouvelle date de naissance : {}",
-                    firstName, lastName, updatedMedicalRecord.getBirthDate());
+                    firstName, lastName, updatedMedicalRecord.getBirthdate());
         } else {
             log.debug("Échec de la mise à jour du dossier médical pour : {} {}", firstName, lastName);
         }
@@ -77,7 +77,7 @@ public class MedicalRecordService {
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
         for (MedicalRecord record : medicalRecords) {
             log.debug("Dossier trouvé : {} {} - Date de naissance : {}",
-                    record.getFirstName(), record.getLastName(), record.getBirthDate());
+                    record.getFirstName(), record.getLastName(), record.getBirthdate());
         }
         log.debug("Fin de récupération des dossiers médicaux. Nombre de dossiers trouvés : {}", medicalRecords.size());
         return medicalRecords;

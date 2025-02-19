@@ -29,9 +29,8 @@ public class MedicalRecord {
     private String lastName;  // Nom
 
     @NotNull(message = "La date de naissance est obligatoire.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "UTC")
-    @JsonProperty("birthdate")
-    private Date birthDate; // Date de naissance
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date birthdate; // Date de naissance
     private List<String> allergies;
     private List<String> medications;
 }

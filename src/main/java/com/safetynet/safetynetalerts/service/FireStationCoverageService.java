@@ -73,7 +73,7 @@ public class FireStationCoverageService {
                     .orElse(null);
 
             if (medicalRecord != null) {
-                int age = calculateAge(medicalRecord.getBirthDate());
+                int age = calculateAge(medicalRecord.getBirthdate());
                 if (age <= 18) {
                     numberOfChildren++;
                 } else {

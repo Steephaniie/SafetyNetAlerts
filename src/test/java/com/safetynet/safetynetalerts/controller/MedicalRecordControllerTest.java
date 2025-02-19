@@ -210,7 +210,7 @@ class MedicalRecordControllerTest {
     void getAllMedicalRecords_ShouldReturnListWhenRecordsExist() throws Exception {
         // Arrange : Création de données de test et configuration du mock pour retourner ces données
         MedicalRecord record = new MedicalRecord("John", "Doe", dateFormat.parse("31/12/1989"), List.of("allergy1"), List.of("med1"));
-        System.out.println("Date enregistrée dans le test : " + dateFormat.format(record.getBirthDate()));
+        System.out.println("Date enregistrée dans le test : " + dateFormat.format(record.getBirthdate()));
         Mockito.when(medicalRecordService.getAllMedicalRecords()).thenReturn(List.of(record));
 
         // Act & Assert : Simulation de la demande et vérifications sur les données retournées

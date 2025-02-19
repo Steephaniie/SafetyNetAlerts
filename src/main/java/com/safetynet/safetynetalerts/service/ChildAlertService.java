@@ -54,14 +54,14 @@ public class ChildAlertService {
                     .orElse(null);
             log.debug("Personne trouvée : {} {}, Age calculé : {}",
                     person.getFirstName(), person.getLastName(),
-                    (medicalRecord != null) ? calculateAge(medicalRecord.getBirthDate()) : "Pas de dossier médical");
+                    (medicalRecord != null) ? calculateAge(medicalRecord.getBirthdate()) : "Pas de dossier médical");
 
 
 //            if (medicalRecord != null) {
                 log.debug("Dossier médical trouvé pour : {} {}", person.getFirstName(), person.getLastName()); // Succès recherche
 
                 if (medicalRecord != null) {
-                int age = calculateAge(medicalRecord.getBirthDate());
+                int age = calculateAge(medicalRecord.getBirthdate());
                 if (age <= 18) {
                     // Ajouter l'enfant à la liste des enfants
                     children.add(new ChildInfo(person.getFirstName(), person.getLastName(), age));

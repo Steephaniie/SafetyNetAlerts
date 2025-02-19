@@ -77,7 +77,7 @@ public class FireStationCoverageServiceTest {
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("John");
         medicalRecord.setLastName("Doe");
-        medicalRecord.setBirthDate(birthDate);
+        medicalRecord.setBirthdate(birthDate);
         medicalRecord.setMedications(List.of("med1", "med2"));
         medicalRecord.setAllergies(List.of("allergy1"));
 
