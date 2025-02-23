@@ -72,7 +72,7 @@ class PhoneAlertControllerTest {
         // Act : Appeler la méthode cible
         ResponseEntity<PhoneAlertDTO> response = phoneAlertController.getPhoneAlert(firestation);
 
-        // Assert : Vérifier que le statut retourné est bien 204
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        // Assert : Vérifier que le statut retourné est bien 404
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

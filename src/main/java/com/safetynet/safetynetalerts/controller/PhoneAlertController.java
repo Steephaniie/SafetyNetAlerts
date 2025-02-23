@@ -31,14 +31,14 @@ public class PhoneAlertController {
     @Operation(summary = "Récupérer les numéros de téléphone des résidents", description = "Retourne les numéros de téléphone de tous les résidents couverts par une caserne spécifique.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Numéros récupérés avec succès."),
-            @ApiResponse(responseCode = "204", description = "Aucun contenu disponible, aucun numéro trouvé.")
+            @ApiResponse(responseCode = "404", description = "Aucun contenu disponible, aucun numéro trouvé.")
     })
     public ResponseEntity<PhoneAlertDTO> getPhoneAlert(@RequestParam("firestation") String firestation) {
         PhoneAlertDTO phoneAlertDTO = phoneAlertService.getPhonesByFireStation(firestation);
 
         if (phoneAlertDTO.getPhoneNumbers().isEmpty()) {
             log.info("api getPhoneAlert - aucun numéro trouvé");
-            return ResponseEntity.noContent().build(); // Aucun numéro trouvé
+            return ResponseEntity.notFound().build(); // Aucun numéro trouvé
         }
         log.info("api getPhoneAlert ok");
         return ResponseEntity.ok(phoneAlertDTO);
