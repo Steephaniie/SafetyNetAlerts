@@ -11,8 +11,8 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * Data Transfer Object (DTO) representing the JSON structure used in the application for storing data.
- * This class contains lists of persons, fire stations, and medical records from the JSON file.
+ * Objet de transfert de données (DTO) représentant la structure JSON utilisée dans l'application pour stocker les données.
+ * Cette classe contient des listes de personnes, de casernes de pompiers et de dossiers médicaux provenant du fichier JSON.
  */
 @Setter
 @Getter
