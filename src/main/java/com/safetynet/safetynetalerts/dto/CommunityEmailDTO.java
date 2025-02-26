@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,16 +14,11 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommunityEmailDTO {
 
     private String city;
     private List<String> emails;
-
-    /**
-     * Constructeur par défaut.
-     */
-    public CommunityEmailDTO() {
-    }
 
     /**
      * Méthode qui retourne une représentation sous forme de chaîne de caractères
