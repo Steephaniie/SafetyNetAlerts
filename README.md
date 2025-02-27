@@ -12,7 +12,7 @@ SafetyNet Alerts est une application Sprint Boot permettant d'envoyer des inform
 - Tests unitaires et couverture de code (JaCoCo et Surefire)
 
 ## Technologies utilisées
-- Java 17
+- Java 21
 - Spring Boot
 - Maven
 - Git
@@ -35,7 +35,7 @@ SafetyNet Alerts est une application Sprint Boot permettant d'envoyer des inform
 4. L'application sera disponible à l'adresse : http://localhost:8080
 5. Endpoints principaux : méthode HTTP : GET, POST, PUT, DELETE
 6. Taux de réussite aux tests : 100 %
-7. Couverture globale de test : 83 %
+7. Couverture globale de test : 94 %
 
 ### Documentation
 - La documentation de l'API est générée avec Swagger : http://localhost:8080/swagger-ui/index.html#/
@@ -48,7 +48,7 @@ SafetyNet Alerts est une application Sprint Boot permettant d'envoyer des inform
 ### Tests via Postman
 - Les requêtes API ont été testées via Postman.
 - Sélectionner GET, POST, PUT ou DELETE selon l’action souhaitée.
-- Entrer l’URL correspondante à l’endpoint à tester (ex: http://localhost:8080/firestation?stationNumber=1).
+
 
 ## Données principales
 - firestation : Assignations d'adresses aux casernes de pompiers
@@ -57,7 +57,7 @@ SafetyNet Alerts est une application Sprint Boot permettant d'envoyer des inform
 
 Ces données peuvent être consultées via la méthode GET et modifiées via les méthodes POST, PUT et DELETE correspondantes.
 
-## API de recherche
+## Endpoints de recherche
 - /firestation?stationNumber=<station_number>
   → Liste des personnes couvertes par une caserne de pompiers et décompte des adultes et enfants.
 
