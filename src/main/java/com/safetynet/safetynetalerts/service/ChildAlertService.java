@@ -32,14 +32,14 @@ public class ChildAlertService {
     public ChildAlertDTO getChildrenAtAddress(String address) {
         log.debug("Début de la méthode getChildrenAtAddress avec l'adresse : {}", address); // Début de la méthode
 
-        // Récupérer toutes les personnes à cette adresse
+        // Récupérer toutes les personnes enregistrées et filtrer celles vivant à l'adresse donnée
         List<Person> allPersons = personService.getAllPersons();
         List<Person> personsAtAddress = allPersons.stream()
                 .filter(person -> address.equals(person.getAddress()))
                 .toList();
         log.debug("Nombre de personnes trouvées à l'adresse {} : {}", address, personsAtAddress.size()); // Nombre de personnes trouvées
 
-        // Récupérer les dossiers médicaux pour ces personnes
+        // Récupérer les dossiers médicaux pour ces personnes pour déterminer l'âge des habitants
         List<MedicalRecord> allMedicalRecords = medicalRecordService.getAllMedicalRecords();
 
         List<ChildInfo> children = new ArrayList<>();
@@ -56,7 +56,7 @@ public class ChildAlertService {
                     person.getFirstName(), person.getLastName(),
                     (medicalRecord != null) ? calculateAge(medicalRecord.getBirthdate()) : "Pas de dossier médical");
 
-
+            // Separer les enfants (< 18 ans) et les adultes
 //            if (medicalRecord != null) {
                 log.debug("Dossier médical trouvé pour : {} {}", person.getFirstName(), person.getLastName()); // Succès recherche
 
@@ -95,7 +95,7 @@ public class ChildAlertService {
                 return new ChildAlertDTO(new ArrayList<>(), new ArrayList<>());
             }
 
-            // Retourner le DTO
+            // Retourner le DTO contenant la liste des enfants et des autres habitants
             log.debug("Retour des données pour l'adresse {} : enfants = {}, membres du foyer = {}", address, children, householdMembers); // Log retour
             return new ChildAlertDTO(children, householdMembers);
         }

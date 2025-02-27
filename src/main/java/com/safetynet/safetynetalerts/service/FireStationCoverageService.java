@@ -58,7 +58,7 @@ public class FireStationCoverageService {
 
         log.debug("Personnes couvertes récupérées pour les adresses {}: {}", coveredAddresses, coveredPersons);
 
-        // Récupérer les dossiers médicaux de toutes ces personnes
+        // Récupérer les dossiers médicaux de toutes ces personnes et comptage des adultes/enfants
         List<MedicalRecord> allMedicalRecords = medicalRecordService.getAllMedicalRecords();
 
         int numberOfAdults = 0;
